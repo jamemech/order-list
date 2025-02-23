@@ -1,0 +1,45 @@
+Products
+id, name, price, image, type, status, created_at, updated_at
+
+Carts
+id, transaction, name, price, quantity, created_at, updated_at
+
+Orders
+id, transaction, amount, user, status, created_at, updated_at
+
+
+Inventory: Admin
+    column (ID, Name, Price, Image, Type, Status)
+        (1, Laptop, 60000, "", Electronics, Active)
+        (2, Smartphone, 30000, "", Electronics, Active)
+        (3, Acoustic Guitar, 9000, "", Instruments, Active)
+        (4, Drip Coffee, 4000, Kitchenware, Inactive)
+    button (Add, Edit, Delete)
+ 
+List: User
+    title (Type)
+        (Electronics)
+        (Instruments)
+    column (ID, Name, Price, Image, Quantity)
+        (1, Laptop, 60000, "", 4)
+        (2, Smartphone, 30000, "", 0)
+        (3, Acoustic Guitar, 9000, "", 4)
+    button (Select, Cancel)
+        (Order)
+
+Cart (User)
+    title (User_Name)
+        (User_10)
+    column (Product_Name, Price, Quantity)
+        (Laptop, 60000, 4)
+        (Acoustic Guitar, 9000, 4)
+    button (Edit, Delete)
+        (Payment > QRcode > Order_ID)
+
+Order Admin
+    column (ID, Cart_ID, User, Total_Price, Status, Date)
+        (3, , User_10, xxx033, 69000, Paid, 31/01/25)
+        (2, User_04, xxx032, Refunded, 21/12/24)
+        (1, User_04, xxx031, Complete, 11/12/24)
+    button (Edit, Delete)
+        (Inventory, List)
