@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -8,41 +8,42 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       name: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       price: {
         allowNull: false,
-        type: Sequelize.FLOAT
+        type: Sequelize.FLOAT,
       },
       image: {
         allowNull: true,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       type: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       status: {
         allowNull: false,
-        type: Sequelize.ENUM('active', 'inactive')
+        type: Sequelize.ENUM('Active', 'Inactive'),
       },
       created_at: {
         allowNull: false,
-        defaultValue: Sequelize.literal('NOW()'),
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updated_at: {
         allowNull: false,
-        defaultValue: Sequelize.literal('NOW()'),
-        type: Sequelize.DATE
-      }
-    });
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+    })
   },
+
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Products');
+    await queryInterface.dropTable('Products')
   }
-};
+}

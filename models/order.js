@@ -22,17 +22,21 @@ export const Order = (connection) => {
         },
         status: {
             allowNull: false,
-            type: DataTypes.ENUM('paid', 'refunded', 'complete'),
+            type: DataTypes.ENUM('Paid', 'Refunded', 'Complete'),
         },
         created_at: {
             allowNull: false,
             type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
         },
         updated_at: {
             allowNull: false,
             type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
         },
     }, {
         tableName: 'Orders',
+        timestamps: true,
+        underscored: true,
     })
 }

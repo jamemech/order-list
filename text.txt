@@ -8,15 +8,15 @@ Orders
 id, transaction, amount, user, status, created_at, updated_at
 
 
-Inventory: Admin
+List: Admin
     column (ID, Name, Price, Image, Type, Status)
         (1, Laptop, 60000, "", Electronics, Active)
         (2, Smartphone, 30000, "", Electronics, Active)
         (3, Acoustic Guitar, 9000, "", Instruments, Active)
         (4, Drip Coffee, 4000, Kitchenware, Inactive)
-    button (Add, Edit, Delete)
+    button (Create, Edit, Delete)
  
-List: User
+Shop: User
     title (Type)
         (Electronics)
         (Instruments)
@@ -42,4 +42,4 @@ Order Admin
         (2, User_04, xxx032, Refunded, 21/12/24)
         (1, User_04, xxx031, Complete, 11/12/24)
     button (Edit, Delete)
-        (Inventory, List)
+        (List, Shop)

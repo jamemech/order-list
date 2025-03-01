@@ -27,18 +27,12 @@ export class Product {
             },
             status: {
                 allowNull: false,
-                type: DataTypes.ENUM('active', 'inactive'),
-            },
-            created_at: {
-                allowNull: false,
-                type: DataTypes.DATE,
-            },
-            updated_at: {
-                allowNull: false,
-                type: DataTypes.DATE,
+                type: DataTypes.ENUM('Active', 'Inactive'),
             },
         }, {
             tableName: 'Products',
+            timestamps: true,
+            underscored: true,
         })
     }
 }
