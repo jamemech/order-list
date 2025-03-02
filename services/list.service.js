@@ -10,7 +10,7 @@ export class listService {
     updateListProduct = async (id, product) => {
         const productId = await this.repository.getProductById(id)
         if (productId) {
-            await this.repository.updateProduct(id, product)
+            return this.repository.updateProduct(id, product)
         }
     }
 
