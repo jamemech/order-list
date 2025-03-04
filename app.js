@@ -1,6 +1,6 @@
 import express, { Router } from 'express'
 import 'dotenv/config'
-import dbConfig from './configs/db.config.js'
+import dbConfig from './configs/db.js'
 import { connection } from './connections/postgres.js'
 
 import { Product } from './models/product.js'
