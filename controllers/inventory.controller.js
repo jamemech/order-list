@@ -4,39 +4,39 @@ export class inventoryController {
 
         router.get('/inventory', this.renderInventoryCtrl)
         router.post('/inventory/create', this.createInventoryCtrl)
-        router.put('/inventory/update', this.updateInventoryCtrl)
+        router.put('/inventory/edit', this.editInventoryCtrl)
         router.delete('/inventory/delete', this.deleteInventoryCtrl)
     }
 
     renderInventoryCtrl = async (req, res) => {
         try {
             const inventory = await this.service.getInventoryServ()
-            res.render('index', { inventory })
+            res.render("inventory", { inventory })
         } catch (error) {
-            console.error('Error:', error)
-            res.status(500).send('Internal Server Error')
+            console.error("Error:", error)
+            res.status(500).send("Internal Server Error")
         }
     }
 
     createInventoryCtrl = async (req, res) => {
         try {
-            const product = req.body
-            await this.service.createInventoryServ(product)
-            res.status(201).send('Create Inventory')
+            const products = req.body
+            await this.service.createInventoryServ(products)
+            res.status(201).send("Create Inventory")
         } catch (error) {
-            console.error('Error:', error)
-            res.status(500).send('Internal Server Error')
+            console.error("Error:", error)
+            res.status(500).send("Internal Server Error")
         }
     }
 
-    updateInventoryCtrl = async (req, res) => {
+    editInventoryCtrl = async (req, res) => {
         try {
             const { id, ...product } = req.body
-            await this.service.updateInventoryServ(id, product)
-            res.status(200).send('Update Inventory')
+            await this.service.editInventoryServ(id, product)
+            res.status(200).send("Update Inventory")
         } catch (error) {
-            console.error('Error:', error)
-            res.status(500).send('Internal Server Error')
+            console.error("Error:", error)
+            res.status(500).send("Internal Server Error")
         }
     }
 
@@ -44,10 +44,10 @@ export class inventoryController {
         try {
             const { id } = req.body
             await this.service.deleteInventoryServ(id)
-            res.status(204).send('Delete Inventory')
+            res.status(204).send("Delete Inventory")
         } catch (error) {
-            console.error('Error:', error)
-            res.status(500).send('Internal Server Error')
+            console.error("Error:", error)
+            res.status(500).send("Internal Server Error")
         }
     }
 }

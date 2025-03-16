@@ -3,5 +3,8 @@ export class listService {
         this.repository = repository
     }
 
-    getListServ = () => this.repository.getProducts()
+    getListServ = async () => {
+        const products = await this.repository.getProducts()
+        return products.filter(product => product.status === 'Active')
+    }
 }

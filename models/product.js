@@ -17,12 +17,12 @@ export class Product {
                 allowNull: false,
                 type: DataTypes.FLOAT,
             },
-            image: {
-                allowNull: true,
-                type: DataTypes.STRING,
-            },
             type: {
                 allowNull: false,
+                type: DataTypes.STRING,
+            },
+            image: {
+                allowNull: true,
                 type: DataTypes.STRING,
             },
             status: {

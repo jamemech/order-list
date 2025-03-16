@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>List</title>
+
+    <style>
+        table {
+            border-collapse: collapse
+        }
+
+        th {
+            background-color: #eeeeee;
+            border: 1px solid #eeeeee;
+            padding: 10px;
+            text-align: center
+        }
+
+        td {
+            border: 1px solid #eeeeee;
+            padding: 30px;
+            text-align: left
+        }
+    </style>
+</head>
+
+
+
+<body>
+    <h1>List</h1>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Image</th>
+        </tr>
+
+        <% list.forEach( product=> { %>
+            <tr>
+                <td style="width: 1px; white-space: nowrap">
+                    <%= product.id %>
+                </td>
+
+                <td style="width: 200px; white-space: nowrap">
+                    <%= product.name %>
+                </td>
+
+                <td style="width: 200px; white-space: nowrap">
+                    <%= product.price %>
+                </td>
+
+                <td style="width: 200px; white-space: nowrap">
+                    <%= product.image %>
+                </td>
+
+                <td>
+                    <button>Select</button>
+                    <button>Cancel</button>
+                </td>
+            </tr>
+            <% }) %>
+    </table>
+
+    <script>
+
+    </script>
+</body>
+
+</html>

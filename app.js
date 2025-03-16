@@ -4,9 +4,15 @@ import dbConfig from './configs/db.js'
 import { connection } from './connections/postgres.js'
 
 import { Product } from './models/product.js'
+
 import { inventoryRepository } from './repositories/inventory.repository.js'
 import { inventoryService } from './services/inventory.service.js'
 import { inventoryController } from './controllers/inventory.controller.js'
+
+import { listRepository } from './repositories/list.repository.js'
+import { listService } from './services/list.service.js'
+import { listController } from './controllers/list.controller.js'
+
 
 const app = express()
 const router = Router()
@@ -15,7 +21,7 @@ const port = 3000
 const db = new connection(dbConfig)
 
 app.set("view engine", "ejs")
-app.set('views', './')
+app.set('views', './views')
 
 app.use(express.json())
 
@@ -29,9 +35,14 @@ db.authenticate()
     })
 
 const productDb = new Product(db)
+
 const inventoryRepo = new inventoryRepository(productDb)
 const inventorySvc = new inventoryService(inventoryRepo)
 new inventoryController(router, inventorySvc)
+
+const listRepo = new listRepository(productDb)
+const listSvc = new listService(listRepo)
+new listController(router, listSvc)
 
 app.use(router)
 

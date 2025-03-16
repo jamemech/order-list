@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Inventory</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #eeeeee;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #eeeeee;
+            text-align: center;
+        }
+
+        td {
+            height: 80px;
+        }
+
+        input {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Inventory</h1>
+
+    <table>
+        <tr>
+            <th style="width: 10px;">ID</th>
+            <th style="width: 100px;">Name</th>
+            <th style="width: 100px;">Price</th>
+            <th style="width: 100px;">Type</th>
+            <th style="width: 100px;">Image</th>
+            <th style="width: 30px;">Status</th>
+            <th style="width: 120px;">Actions</th>
+        </tr>
+
+        <% inventory.forEach(product=> { %>
+            <tr data-id="<%= product.id %>">
+                <td>
+                    <%= product.id %>
+                </td>
+                <td>
+                    <%= product.name %>
+                </td>
+                <td>
+                    <%= product.price.toLocaleString('th-TH') %>
+                </td>
+                </td>
+                <td>
+                    <%= product.type %>
+                </td>
+                <td>
+                    <img src="<%= product.image %>" alt="Image">
+                </td>
+                <td>
+                    <%= product.status %>
+                </td>
+                <td>
+                    <button class="edit-btn">Edit</button><br>
+                    <button class="delete-btn">Delete</button>
+                </td>
+            </tr>
+            <% }) %>
+    </table>
+
+    <script>
+        const createButton = (text, onClick) => {
+            const btn = document.createElement("button")
+            btn.textContent = text
+            btn.addEventListener("click", onClick)
+            return btn
+        }
+
+        document.querySelectorAll(".edit-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const row = button.closest("tr")
+                const cells = row.cells
+                const productId = row.getAttribute("data-id")
+
+                const oldValues = {
+                    name: cells[1].innerText,
+                    price: cells[2].innerText,
+                    type: cells[3].innerText
+                }
+
+                cells[1].innerHTML = `<input type="text" value="${oldValues.name}">`
+                cells[2].innerHTML = `<input type="text" value="${oldValues.price}">`
+                cells[3].innerHTML = `<input type="text" value="${oldValues.type}">`
+
+                const saveBtn = createButton("Save", () => saveEdit())
+                const cancelBtn = createButton("Cancel", () => cancelEdit())
+
+                button.replaceWith(saveBtn)
+                saveBtn.after(cancelBtn)
+
+                const saveEdit = async () => {
+                    const newValues = {
+                        name: cells[1].querySelector("input").value,
+                        price: cells[2].querySelector("input").value.replace(/,/g, ""),
+                        type: cells[3].querySelector("input").value
+                    }
+
+                    if (isNaN(newValues.price) || newValues.price.trim() === "") {
+                        alert("Invalid price")
+                        return
+                    }
+
+                    await fetch("http://localhost:3000/inventory/edit", {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id: productId, ...newValues })
+                    })
+
+                    cells[1].innerText = newValues.name
+                    cells[2].innerText = newValues.price
+                    cells[3].innerText = newValues.type
+
+                    saveBtn.replaceWith(button)
+                    cancelBtn.remove()
+
+                    reset()
+                }
+
+                const cancelEdit = () => {
+                    cells[1].innerText = oldValues.name
+                    cells[2].innerText = oldValues.price
+                    cells[3].innerText = oldValues.type
+
+                    saveBtn.replaceWith(button)
+                    cancelBtn.remove()
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

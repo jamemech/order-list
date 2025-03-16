@@ -18,12 +18,12 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.FLOAT,
             },
-            image: {
-                allowNull: true,
-                type: Sequelize.STRING,
-            },
             type: {
                 allowNull: false,
+                type: Sequelize.STRING,
+            },
+            image: {
+                allowNull: true,
                 type: Sequelize.STRING,
             },
             status: {

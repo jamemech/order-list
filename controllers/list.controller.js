@@ -8,10 +8,11 @@ export class listController {
     renderListCtrl = async (req, res) => {
         try {
             const list = await this.service.getListServ()
-            res.render('index', { list })
+            console.log(list)
+            res.render("list", { list })
         } catch (error) {
-            console.error('Error:', error)
-            res.status(500).send('Internal Server Error')
+            console.error("Error:", error)
+            res.status(500).send("Internal Server Error")
         }
     }
 }

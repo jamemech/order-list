@@ -5,12 +5,12 @@ export class inventoryService {
 
     getInventoryServ = () => this.repository.getProducts()
 
-    createInventoryServ = (product) => this.repository.createProduct(product)
+    createInventoryServ = (products) => this.repository.createProduct(products)
 
-    updateInventoryServ = async (id, product) => {
+    editInventoryServ = async (id, product) => {
         const productId = await this.repository.getProductById(id)
         if (productId) {
-            return this.repository.updateProduct(id, product)
+            await this.repository.updateProduct(id, product)
         }
     }
 

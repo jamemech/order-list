@@ -9,7 +9,7 @@ export class inventoryRepository {
 
     getProductById = (id) => this.Product.findByPk(id)
 
-    createProduct = (product) => this.Product.create(product, {
+    createProduct = (products) => this.Product.bulkCreate(products, {
         order: [['id', 'ASC']]
     })
 
