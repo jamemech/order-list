@@ -13,6 +13,16 @@ export class Cart {
                 allowNull: false,
                 type: DataTypes.STRING,
             },
+            product_id: {
+                allowNull: false,
+                type: DataTypes.INTEGER,
+                references: {
+                    model: 'Product',
+                    key: 'id',
+                },
+                onUpdate: 'RESTRICT',
+                onDelete: 'RESTRICT',
+            },
             name: {
                 allowNull: false,
                 type: DataTypes.STRING,

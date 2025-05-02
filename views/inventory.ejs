@@ -3,24 +3,27 @@
 
 <head>
     <title>Inventory</title>
+
     <style>
         table {
-            border-collapse: collapse;
+            table-layout: fixed;
+            border-collapse: collapse
         }
 
         th,
         td {
+            text-align: center;
             border: 1px solid #eeeeee;
-            padding: 10px;
+            padding: 8px;
         }
 
         th {
             background-color: #eeeeee;
-            text-align: center;
         }
 
         td {
-            height: 80px;
+            word-break: break-all;
+            height: 90px;
         }
 
         input {
@@ -29,42 +32,54 @@
     </style>
 </head>
 
+
+
 <body>
-    <h1>Inventory</h1>
+    <h1 style="font-size: 26px;">Inventory</h1>
+
+    <button class="create-btn">Create</button><br>
+    <!-- <a href="#" class="create-btn" style="font-size: 20px; color: black;">Create</a> -->
 
     <table>
         <tr>
-            <th style="width: 10px;">ID</th>
-            <th style="width: 100px;">Name</th>
-            <th style="width: 100px;">Price</th>
-            <th style="width: 100px;">Type</th>
-            <th style="width: 100px;">Image</th>
-            <th style="width: 30px;">Status</th>
-            <th style="width: 120px;">Actions</th>
+            <th style="width: 40px;">ID</th>
+            <th style="width: 120px;">Name</th>
+            <th style="width: 120px;">Price</th>
+            <th style="width: 120px;">Type</th>
+            <th style="width: 120px;">Image</th>
+            <th style="width: 120px;">Status</th>
         </tr>
 
-        <% inventory.forEach(product=> { %>
+        <% data.forEach(product=> { %>
             <tr data-id="<%= product.id %>">
                 <td>
-                    <%= product.id %>
+                    <%= String(product.id).padStart(3, '0' ) %>
                 </td>
-                <td>
+
+                <td style="text-align: left;">
                     <%= product.name %>
                 </td>
-                <td>
-                    <%= product.price.toLocaleString('th-TH') %>
+
+                <td style="text-align: right;">
+                    <%= product.price.toLocaleString('th-TH', { minimumFractionDigits: 2 }) %> ฿
                 </td>
-                </td>
+
                 <td>
                     <%= product.type %>
                 </td>
-                <td>
-                    <img src="<%= product.image %>" alt="Image">
+
+                <td style="position: relative;">
+                    <img src="/<%= product.image %>" style="width: 100%; height: 100%; display: block;">
+                    <button class="upload-btn" style="position: absolute; bottom: 8px; left: 8px;">Upload</button>
                 </td>
-                <td>
-                    <%= product.status %>
-                </td>
-                <td>
+
+                <td style="text-align: left;">
+                    <select name="status" class="status-select">
+                        <option value="Inactive" <%=product.status==='Inactive' ? 'selected' : '' %>>Inactive</option>
+                        <option value="Active" <%=product.status==='Active' ? 'selected' : '' %>>Active</option>
+                    </select>
+                    <br>
+                    <br>
                     <button class="edit-btn">Edit</button><br>
                     <button class="delete-btn">Delete</button>
                 </td>
@@ -72,75 +87,211 @@
             <% }) %>
     </table>
 
+
+
     <script>
         const createButton = (text, onClick) => {
             const btn = document.createElement("button")
             btn.textContent = text
-            btn.addEventListener("click", onClick)
+            btn.onclick = onClick
             return btn
         }
 
+
+
+        document.querySelector(".create-btn").addEventListener("click", () => {
+            const createBtn = document.querySelector(".create-btn")
+
+            const popup = document.createElement("div")
+            popup.style.cssText = `
+                position: fixed;
+                top: 48px;
+                background: #fff;
+                padding: 16px;
+                border: 1px solid #eee;
+            `
+            popup.innerHTML = `
+                <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+                    <input id="popup-name" placeholder="Name" style="width: 120px;">
+                    <input id="popup-price" type="number" placeholder="Price" style="width: 120px;">
+                    <input id="popup-type" placeholder="Type" style="width: 120px;">
+                </div>
+            `
+
+            const closePopup = () => document.body.removeChild(popup)
+
+            const saveBtn = createButton("Save", async () => {
+                const product = {
+                    name: document.getElementById("popup-name").value,
+                    price: parseFloat(parseFloat(document.getElementById("popup-price").value).toFixed(2)),
+                    type: document.getElementById("popup-type").value
+                }
+
+                await fetch("http://localhost:3000/inventory/create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(product)
+                })
+
+                closePopup()
+                window.location.href = "/inventory"
+            })
+
+            const cancelBtn = createButton("Cancel", closePopup)
+
+            popup.append(saveBtn, cancelBtn)
+            document.body.appendChild(popup)
+        })
+
+
+
         document.querySelectorAll(".edit-btn").forEach(button => {
             button.addEventListener("click", () => {
+
+                document.querySelectorAll(".edit-btn").forEach(btn => {
+                    btn.disabled = true
+                })
+
                 const row = button.closest("tr")
                 const cells = row.cells
-                const productId = row.getAttribute("data-id")
+                const id = row.dataset.id
 
-                const oldValues = {
+                const current = {
                     name: cells[1].innerText,
-                    price: cells[2].innerText,
+                    price: cells[2].innerText.replace(/[^0-9.-]+/g, ''),
                     type: cells[3].innerText
                 }
 
-                cells[1].innerHTML = `<input type="text" value="${oldValues.name}">`
-                cells[2].innerHTML = `<input type="text" value="${oldValues.price}">`
-                cells[3].innerHTML = `<input type="text" value="${oldValues.type}">`
+                cells[1].innerHTML = `<input value="${current.name}">`
+                cells[2].innerHTML = `<input type="number" value="${current.price}">`
+                cells[3].innerHTML = `<input value="${current.type}">`
 
-                const saveBtn = createButton("Save", () => saveEdit())
-                const cancelBtn = createButton("Cancel", () => cancelEdit())
-
-                button.replaceWith(saveBtn)
-                saveBtn.after(cancelBtn)
-
-                const saveEdit = async () => {
-                    const newValues = {
-                        name: cells[1].querySelector("input").value,
-                        price: cells[2].querySelector("input").value.replace(/,/g, ""),
-                        type: cells[3].querySelector("input").value
-                    }
-
-                    if (isNaN(newValues.price) || newValues.price.trim() === "") {
-                        alert("Invalid price")
-                        return
+                const saveBtn = createButton("Save", async () => {
+                    const inputs = row.querySelectorAll("input")
+                    const product = {
+                        name: inputs[0].value,
+                        price: parseFloat(parseFloat(inputs[1].value).toFixed(2)),
+                        type: inputs[2].value
                     }
 
                     await fetch("http://localhost:3000/inventory/edit", {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ id: productId, ...newValues })
+                        body: JSON.stringify({ id, ...product })
                     })
 
-                    cells[1].innerText = newValues.name
-                    cells[2].innerText = newValues.price
-                    cells[3].innerText = newValues.type
+                    location.reload()
+                })
 
-                    saveBtn.replaceWith(button)
-                    cancelBtn.remove()
+                const cancelBtn = createButton("Cancel", () => {
+                    location.reload()
+                })
 
-                    reset()
-                }
+                button.replaceWith(saveBtn)
+                saveBtn.after(cancelBtn)
+            })
+        })
 
-                const cancelEdit = () => {
-                    cells[1].innerText = oldValues.name
-                    cells[2].innerText = oldValues.price
-                    cells[3].innerText = oldValues.type
 
-                    saveBtn.replaceWith(button)
-                    cancelBtn.remove()
+
+
+        document.querySelectorAll(".status-select").forEach(select => {
+            select.addEventListener("change", async () => {
+                const row = select.closest("tr")
+                const id = row.dataset.id
+                const status = select.value
+
+                await fetch("http://localhost:3000/inventory/status", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id, status })
+                })
+
+                const statusCell = row.querySelector(".status-cell")
+                if (statusCell) {
+                    statusCell.textContent = status
                 }
             })
         })
+
+
+
+
+        document.querySelectorAll(".upload-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const row = button.closest("tr")
+                const id = row.dataset.id
+
+                const inputFile = document.createElement("input")
+                inputFile.type = "file"
+                inputFile.accept = "image/*"
+
+                inputFile.addEventListener("change", async () => {
+                    const file = inputFile.files[0]
+                    if (!file) return
+
+                    const formData = new FormData()
+                    formData.append("image", file)
+                    formData.append("id", id)
+
+                    await fetch("http://localhost:3000/inventory/upload", {
+                        method: "PUT",
+                        body: formData
+                    })
+
+                    location.reload()
+                })
+
+                inputFile.click()
+            })
+        })
+
+
+
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", async () => {
+                const row = button.closest("tr")
+                const id = row.dataset.id
+
+                const confirmDelete = confirm("Delete")
+
+                if (!confirmDelete) return
+
+                await fetch("http://localhost:3000/inventory/delete", {
+                    method: "DELETE",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id })
+                })
+
+                row.remove()
+                location.reload()
+            })
+        })
     </script>
+
+
+
+    <div>
+        <a href="/inventory?page=1" style="text-decoration: none; color: black; margin: 0 4px;">
+            &lt;&lt;
+        </a>
+
+        <a href="/inventory?page=<%= page > 1 ? page - 1 : 1 %>"
+            style="text-decoration: none; color: black; margin: 0 4px;">
+            &lt;
+        </a>
+
+        Page <%= page%> of <%= totalPages %>
+
+                <a href="/inventory?page=<%= page < totalPages ? page + 1 : totalPages %>"
+                    style="text-decoration: none; color: black; margin: 0 4px;">
+                    &gt;
+                </a>
+
+                <a href="/inventory?page=<%= totalPages %>" style="text-decoration: none; color: black; margin: 0 4px;">
+                    &gt;&gt;
+                </a>
+    </div>
 </body>
 
 </html>

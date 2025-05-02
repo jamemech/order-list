@@ -1,17 +1,15 @@
 import express, { Router } from 'express'
+import multer from 'multer'
+import path from 'path'
 import 'dotenv/config'
 import dbConfig from './configs/db.js'
 import { connection } from './connections/postgres.js'
-
 import { Product } from './models/product.js'
 
-import { inventoryRepository } from './repositories/inventory.repository.js'
-import { inventoryService } from './services/inventory.service.js'
-import { inventoryController } from './controllers/inventory.controller.js'
-
-import { listRepository } from './repositories/list.repository.js'
-import { listService } from './services/list.service.js'
-import { listController } from './controllers/list.controller.js'
+// Inventory module
+import { InventoryRepository } from './repositories/inventory.repository.js'
+import { InventoryService } from './services/inventory.service.js'
+import { InventoryController } from './controllers/inventory.controller.js'
 
 
 const app = express()
@@ -19,37 +17,35 @@ const router = Router()
 const port = 3000
 
 const db = new connection(dbConfig)
+const productDb = new Product(db)
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, 'uploads/'),
+    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+})
 
 app.set("view engine", "ejs")
 app.set('views', './views')
 
 app.use(express.json())
+app.use('/uploads', express.static('uploads'))
 
 db.authenticate()
     .then(() => {
-        console.log('Database connection successful.')
+        console.log('Database connected')
     })
     .catch((error) => {
-        console.error('Database connection error:', error)
-        process.exit(1)
+        console.error('Database connect error:', error)
+        setImmediate(() => process.exit(1))
     })
 
-const productDb = new Product(db)
+// Inventory module
+const inventoryRepo = new InventoryRepository(productDb)
+const inventorySvc = new InventoryService(inventoryRepo)
+new InventoryController(inventorySvc, router, storage)
 
-const inventoryRepo = new inventoryRepository(productDb)
-const inventorySvc = new inventoryService(inventoryRepo)
-new inventoryController(router, inventorySvc)
-
-const listRepo = new listRepository(productDb)
-const listSvc = new listService(listRepo)
-new listController(router, listSvc)
 
 app.use(router)
-
-
-
-
-
 
 app.listen(port, () => {
     console.log(`Server listening on port: ${port}`)
@@ -60,13 +56,13 @@ process.on('SIGINT', async () => {
 
     try {
         await db.close()
-        console.log('Database connection closed.')
+        console.log('Database closed')
     } catch (error) {
-        console.error('Error while closing the database connection:', error)
+        console.error('Database close error:', error)
     }
 
     app.close(() => {
-        console.log('Express server closed.')
-        process.exit(0)
+        console.log('Server Closed')
+        setImmediate(() => process.exit(0))
     })
 })
