@@ -27,7 +27,11 @@ export class Product {
             },
             status: {
                 allowNull: false,
-                type: DataTypes.ENUM('Active', 'Inactive'),
+                type: DataTypes.STRING,
+                defaultValue: 'Inactive',
+                validate: {
+                    isIn: [['Active', 'Inactive']],
+                },
             },
         }, {
             tableName: 'Products',

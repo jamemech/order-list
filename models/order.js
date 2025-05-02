@@ -22,8 +22,12 @@ export class Order {
                 type: DataTypes.FLOAT,
             },
             status: {
-                allowNull: false,
-                type: DataTypes.ENUM('Paid', 'Complete'),
+                allowNull: true,
+                type: DataTypes.STRING,
+                defaultValue: 'Paid',
+                validate: {
+                    isIn: [['Paid', 'Complete']],
+                },
             },
         }, {
             tableName: 'Orders',
