@@ -2,8 +2,8 @@ import express, { Router } from 'express'
 import multer from 'multer'
 import path from 'path'
 import 'dotenv/config'
-import dbConfig from './configs/db.js'
-import { connection } from './connections/postgres.js'
+import config from './configs/db.config.js'
+import { Connection } from './connections/sequelize.connection.js'
 import { Product } from './models/product.js'
 
 // Inventory module
@@ -12,16 +12,20 @@ import { InventoryService } from './services/inventory.service.js'
 import { InventoryController } from './controllers/inventory.controller.js'
 
 
+
+const env = process.env.NODE_ENV || 'development'
+const db = new Connection(config, env)
+const productDb = new Product(db)
+
 const app = express()
 const router = Router()
 const port = 3000
 
-const db = new connection(dbConfig)
-const productDb = new Product(db)
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, 'uploads/'),
-    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => cb(null, 'uploads'),
+        filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+    })
 })
 
 app.set("view engine", "ejs")
@@ -42,12 +46,13 @@ db.authenticate()
 // Inventory module
 const inventoryRepo = new InventoryRepository(productDb)
 const inventorySvc = new InventoryService(inventoryRepo)
-new InventoryController(inventorySvc, router, storage)
+new InventoryController(inventorySvc, router, upload)
+
 
 
 app.use(router)
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Server listening on port: ${port}`)
 })
 
@@ -61,7 +66,7 @@ process.on('SIGINT', async () => {
         console.error('Database close error:', error)
     }
 
-    app.close(() => {
+    server.close(() => {
         console.log('Server Closed')
         setImmediate(() => process.exit(0))
     })

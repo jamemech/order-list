@@ -6,24 +6,24 @@
 
     <style>
         table {
+            border-collapse: collapse;
             table-layout: fixed;
-            border-collapse: collapse
         }
 
         th,
         td {
-            text-align: center;
-            border: 1px solid #eeeeee;
+            border: 1px solid #eee;
             padding: 8px;
+            text-align: center;
         }
 
         th {
-            background-color: #eeeeee;
+            background-color: #eee;
         }
 
         td {
-            word-break: break-all;
             height: 90px;
+            word-break: break-all;
         }
 
         input {
@@ -37,8 +37,7 @@
 <body>
     <h1 style="font-size: 26px;">Inventory</h1>
 
-    <button class="create-btn">Create</button><br>
-    <!-- <a href="#" class="create-btn" style="font-size: 20px; color: black;">Create</a> -->
+    <button class="create-btn">Create</button>
 
     <table>
         <tr>
@@ -51,12 +50,14 @@
         </tr>
 
         <% data.forEach(product=> { %>
-            <tr data-id="<%= product.id %>">
+            <tr data-id="<%= product.id %>" data-name="<%= product.name %>" data-price="<%= product.price %>"
+                data-type="<%= product.type %>" data-image="<%= product.image %>" data-status="<%= product.status %>">
+
                 <td>
                     <%= String(product.id).padStart(3, '0' ) %>
                 </td>
 
-                <td style="text-align: left;">
+                <td style=" text-align: left;">
                     <%= product.name %>
                 </td>
 
@@ -74,9 +75,9 @@
                 </td>
 
                 <td style="text-align: left;">
-                    <select name="status" class="status-select">
-                        <option value="Inactive" <%=product.status==='Inactive' ? 'selected' : '' %>>Inactive</option>
-                        <option value="Active" <%=product.status==='Active' ? 'selected' : '' %>>Active</option>
+                    <select name="status" class="select-status">
+                        <option value="Inactive" <%=product.status==='Inactive' && 'selected' %>>Inactive</option>
+                        <option value="Active" <%=product.status==='Active' && 'selected' %>>Active</option>
                     </select>
                     <br>
                     <br>
@@ -90,159 +91,110 @@
 
 
     <script>
-        const createButton = (text, onClick) => {
+        const btn = (text, click) => {
             const btn = document.createElement("button")
             btn.textContent = text
-            btn.onclick = onClick
+            btn.onclick = click
             return btn
         }
 
 
 
         document.querySelector(".create-btn").addEventListener("click", () => {
-            const createBtn = document.querySelector(".create-btn")
+            const modal = document.getElementById("modal")
+            const modalControl = document.getElementById("modalControl")
 
-            const popup = document.createElement("div")
-            popup.style.cssText = `
-                position: fixed;
-                top: 48px;
-                background: #fff;
-                padding: 16px;
-                border: 1px solid #eee;
-            `
-            popup.innerHTML = `
-                <div style="display: flex; gap: 10px; margin-bottom: 8px;">
-                    <input id="popup-name" placeholder="Name" style="width: 120px;">
-                    <input id="popup-price" type="number" placeholder="Price" style="width: 120px;">
-                    <input id="popup-type" placeholder="Type" style="width: 120px;">
-                </div>
-            `
+            const closeModal = () => {
+                modal.style.display = "none"
+            }
 
-            const closePopup = () => document.body.removeChild(popup)
+            const saveBtn = btn("Save", async () => {
+                const nameInput = document.getElementById("nameInput").value
+                const priceInput = document.getElementById("priceInput").value
+                const typeInput = document.getElementById("typeInput").value
 
-            const saveBtn = createButton("Save", async () => {
                 const product = {
-                    name: document.getElementById("popup-name").value,
-                    price: parseFloat(parseFloat(document.getElementById("popup-price").value).toFixed(2)),
-                    type: document.getElementById("popup-type").value
+                    name: nameInput,
+                    price: parseFloat(parseFloat(priceInput).toFixed(2)),
+                    type: typeInput
                 }
 
-                await fetch("http://localhost:3000/inventory/create", {
+                const response = await fetch("http://localhost:3000/inventory/create", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(product)
                 })
 
-                closePopup()
+                if (!response.ok) {
+                    const data = await response.json()
+                    const errorMessages = data.errors.map(err => err.msg).join("\n")
+                    alert(errorMessages)
+                    return
+                }
+
+                closeModal()
                 window.location.href = "/inventory"
             })
 
-            const cancelBtn = createButton("Cancel", closePopup)
+            const cancelBtn = btn("Cancel", closeModal)
 
-            popup.append(saveBtn, cancelBtn)
-            document.body.appendChild(popup)
+            modal.style.display = "flex"
+            modalControl.innerHTML = ""
+            modalControl.appendChild(saveBtn)
+            modalControl.appendChild(cancelBtn)
         })
 
 
 
         document.querySelectorAll(".edit-btn").forEach(button => {
             button.addEventListener("click", () => {
-
-                document.querySelectorAll(".edit-btn").forEach(btn => {
+                document.querySelectorAll("button").forEach(btn => {
                     btn.disabled = true
                 })
 
                 const row = button.closest("tr")
-                const cells = row.cells
                 const id = row.dataset.id
 
                 const current = {
-                    name: cells[1].innerText,
-                    price: cells[2].innerText.replace(/[^0-9.-]+/g, ''),
-                    type: cells[3].innerText
+                    id: row.dataset.id,
+                    name: row.dataset.name,
+                    price: row.dataset.price,
+                    type: row.dataset.type
                 }
 
-                cells[1].innerHTML = `<input value="${current.name}">`
-                cells[2].innerHTML = `<input type="number" value="${current.price}">`
-                cells[3].innerHTML = `<input value="${current.type}">`
+                row.cells[1].innerHTML = `<input type="text" value="${current.name}">`
+                row.cells[2].innerHTML = `<input type="number" value="${current.price}">`
+                row.cells[3].innerHTML = `<input type="text" value="${current.type}">`
 
-                const saveBtn = createButton("Save", async () => {
+                const saveBtn = btn("Save", async () => {
                     const inputs = row.querySelectorAll("input")
+
                     const product = {
                         name: inputs[0].value,
                         price: parseFloat(parseFloat(inputs[1].value).toFixed(2)),
                         type: inputs[2].value
                     }
 
-                    await fetch("http://localhost:3000/inventory/edit", {
+                    const response = await fetch("http://localhost:3000/inventory/edit", {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ id, ...product })
                     })
 
+                    if (!response.ok) {
+                        const data = await response.json()
+                        const errorMessages = data.errors.map(err => err.msg).join("\n")
+                        alert(errorMessages)
+                        return
+                    }
+
                     location.reload()
                 })
 
-                const cancelBtn = createButton("Cancel", () => {
-                    location.reload()
-                })
+                const cancelBtn = btn("Cancel", () => location.reload())
 
                 button.replaceWith(saveBtn)
                 saveBtn.after(cancelBtn)
-            })
-        })
-
-
-
-
-        document.querySelectorAll(".status-select").forEach(select => {
-            select.addEventListener("change", async () => {
-                const row = select.closest("tr")
-                const id = row.dataset.id
-                const status = select.value
-
-                await fetch("http://localhost:3000/inventory/status", {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ id, status })
-                })
-
-                const statusCell = row.querySelector(".status-cell")
-                if (statusCell) {
-                    statusCell.textContent = status
-                }
-            })
-        })
-
-
-
-
-        document.querySelectorAll(".upload-btn").forEach(button => {
-            button.addEventListener("click", () => {
-                const row = button.closest("tr")
-                const id = row.dataset.id
-
-                const inputFile = document.createElement("input")
-                inputFile.type = "file"
-                inputFile.accept = "image/*"
-
-                inputFile.addEventListener("change", async () => {
-                    const file = inputFile.files[0]
-                    if (!file) return
-
-                    const formData = new FormData()
-                    formData.append("image", file)
-                    formData.append("id", id)
-
-                    await fetch("http://localhost:3000/inventory/upload", {
-                        method: "PUT",
-                        body: formData
-                    })
-
-                    location.reload()
-                })
-
-                inputFile.click()
             })
         })
 
@@ -253,8 +205,7 @@
                 const row = button.closest("tr")
                 const id = row.dataset.id
 
-                const confirmDelete = confirm("Delete")
-
+                const confirmDelete = confirm("Delete product")
                 if (!confirmDelete) return
 
                 await fetch("http://localhost:3000/inventory/delete", {
@@ -263,13 +214,82 @@
                     body: JSON.stringify({ id })
                 })
 
-                row.remove()
                 location.reload()
+            })
+        })
+
+
+
+        document.querySelectorAll(".select-status").forEach(select => {
+            select.addEventListener("change", async () => {
+                const row = select.closest("tr")
+                const id = row.dataset.id
+                const status = select.value
+
+                await fetch("http://localhost:3000/inventory/status", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id, status })
+                })
+            })
+        })
+
+
+
+        document.querySelectorAll(".upload-btn").forEach(button => {
+            button.addEventListener("click", () => {
+                const id = button.closest("tr").dataset.id
+                const upload = document.createElement("upload")
+                upload.type = "file"
+                upload.accept = "image/*"
+                upload.click()
+
+                upload.addEventListener("change", async () => {
+                    const file = upload.files[0]
+                    if (!file) return
+
+                    const formData = new FormData()
+                    formData.append("id", id)
+                    formData.append("image", file)
+
+                    await fetch("http://localhost:3000/inventory/upload", {
+                        method: "PUT",
+                        body: formData
+                    })
+
+                    location.reload()
+                })
             })
         })
     </script>
 
 
+
+    <div id="modal" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 780px;
+    height: 100%;
+    background: #00000080;
+    justify-content: center;
+    align-items: flex-start;
+">
+        <div style="
+        background: #fff;
+        margin-top: 48px;
+        padding: 16px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+    ">
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input id="nameInput" placeholder="Name" style="width: 120px;" autocomplete="off">
+                <input id="priceInput" type="number" placeholder="Price" style="width: 120px;" autocomplete="off">
+                <input id="typeInput" placeholder="Type" style="width: 120px;" autocomplete="off">
+            </div>
+            <div id="modalControl"></div>
+        </div>
+    </div>
 
     <div>
         <a href="/inventory?page=1" style="text-decoration: none; color: black; margin: 0 4px;">
