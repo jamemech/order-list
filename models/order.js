@@ -1,3 +1,5 @@
+//clear
+
 import { DataTypes } from 'sequelize'
 
 export class Order {
@@ -9,11 +11,7 @@ export class Order {
                 primaryKey: true,
                 type: DataTypes.INTEGER,
             },
-            transaction: {
-                allowNull: false,
-                type: DataTypes.STRING,
-            },
-            user: {
+            username: {
                 allowNull: false,
                 type: DataTypes.STRING,
             },
@@ -26,11 +24,11 @@ export class Order {
                 type: DataTypes.STRING,
                 defaultValue: 'Paid',
                 validate: {
-                    isIn: [['Paid', 'Complete']],
+                    isIn: [['Paid', 'Refunded', 'Complete']],
                 },
             },
         }, {
-            tableName: 'Orders',
+            tableName: 'orders',
             timestamps: true,
             underscored: true,
         })

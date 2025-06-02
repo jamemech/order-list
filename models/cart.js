@@ -1,3 +1,5 @@
+//clear
+
 import { DataTypes } from 'sequelize'
 
 export class Cart {
@@ -9,9 +11,15 @@ export class Cart {
                 primaryKey: true,
                 type: DataTypes.INTEGER,
             },
-            transaction: {
+            order_id: {
                 allowNull: false,
-                type: DataTypes.STRING,
+                type: DataTypes.INTEGER,
+                references: {
+                    model: 'Order',
+                    key: 'id',
+                },
+                onUpdate: 'RESTRICT',
+                onDelete: 'RESTRICT',
             },
             product_id: {
                 allowNull: false,
@@ -27,6 +35,10 @@ export class Cart {
                 allowNull: false,
                 type: DataTypes.STRING,
             },
+            price: {
+                allowNull: false,
+                type: DataTypes.FLOAT,
+            },
             piece: {
                 allowNull: false,
                 type: DataTypes.INTEGER,
@@ -36,7 +48,7 @@ export class Cart {
                 type: DataTypes.FLOAT,
             },
         }, {
-            tableName: 'Carts',
+            tableName: 'carts',
             timestamps: true,
             underscored: true,
         })

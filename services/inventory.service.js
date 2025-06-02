@@ -1,3 +1,5 @@
+//clear
+
 import fs from 'fs'
 import path from 'path'
 
@@ -6,20 +8,27 @@ export class InventoryService {
         this.repository = repository
     }
 
-    getPageServ = (page) => {
+    getInventoryPageServ = async (page) => {
         const limit = 5
         const offset = limit * (page - 1)
         const order = [['id', 'DESC']]
-        return this.repository.getPage(limit, offset, order)
+
+        const pageData = await this.repository.getPage(limit, offset, order)
+        const totalPages = Math.max(1, Math.ceil(pageData.count / limit))
+
+        return {
+            totalPages,
+            data: pageData.rows
+        }
     }
 
-    createProductServ = (product) => this.repository.createProduct(product)
+    createInventoryServ = (product) => this.repository.createProduct(product)
 
-    updateProductServ = (id, product) => this.repository.updateProduct(id, product)
+    updateInventoryServ = (id, product) => this.repository.updateProduct(id, product)
 
-    updateStatusServ = async (id, status) => this.repository.updateStatus(id, status)
+    updateInventoryStatusServ = async (id, status) => this.repository.updateStatus(id, status)
 
-    deleteImageFile = async (id) => {
+    deleteImage = async (id) => {
         const imagePath = await this.repository.getImage(id)
 
         if (imagePath && fs.existsSync(path.resolve(imagePath))) {
@@ -27,13 +36,13 @@ export class InventoryService {
         }
     }
 
-    updateImageServ = async (id, image) => {
-        await this.deleteImageFile(id)
+    updateInventoryImageServ = async (id, image) => {
+        await this.deleteImage(id)
         await this.repository.updateImage(id, image)
     }
 
-    deleteProductServ = async (id) => {
-        await this.deleteImageFile(id)
+    deleteInventoryServ = async (id) => {
+        await this.deleteImage(id)
         await this.repository.deleteProduct(id)
     }
 }

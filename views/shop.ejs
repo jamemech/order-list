@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Shop</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            border: 1px solid #eeeeee;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #eeeeee;
+        }
+
+        td {
+            height: 90px;
+            word-break: break-all;
+        }
+
+        input {
+            width: 100%;
+        }
+    </style>
+</head>
+
+
+
+<body>
+    <h1 style="font-size: 26px;">Shop</h1>
+
+    <button class="cart-btn">Cart</button>
+
+    <table>
+        <tr>
+            <th style="width: 40px;">ID</th>
+            <th style="width: 120px;">Name</th>
+            <th style="width: 120px;">Price</th>
+            <th style="width: 120px;">Type</th>
+            <th style="width: 120px;">Image</th>
+            <th style="width: 120px;">Piece</th>
+        </tr>
+
+        <% data.forEach(product=> { %>
+            <tr data-id="<%= product.id %>" data-name="<%= product.name %>" data-price="<%= product.price %>"
+                data-type="<%= product.type %>" data-image="<%= product.image %>">
+
+                <td>
+                    <%= String(product.id).padStart(3, '0' ) %>
+                </td>
+
+                <td style="text-align: left;">
+                    <%= product.name %>
+                </td>
+
+                <td style="text-align: right;">
+                    <%= product.price.toLocaleString('th-TH', { minimumFractionDigits: 2 }) %> ฿
+                </td>
+
+                <td>
+                    <%= product.type %>
+                </td>
+
+                <td style="position: relative;">
+                    <img src="/<%= product.image %>" style="width: 100%; height: 100%; display: block;">
+                </td>
+
+                <td>
+                    <input class="piece" type="number" value="0" style="width: 60px; text-align: center;"
+                        oninput="this.value = Math.max(0, this.value)">
+                </td>
+            </tr>
+            <% }) %>
+    </table>
+
+
+
+    <script>
+        const btn = (text, click) => {
+            const btn = document.createElement("button")
+            btn.textContent = text
+            btn.onclick = click
+            return btn
+        }
+
+
+
+        document.querySelector(".cart-btn").addEventListener("click", () => {
+            const modal = document.getElementById("modal")
+            const modalBody = document.getElementById("modalBody")
+            const modalControl = document.getElementById("modalControl")
+
+            const closeModal = () => {
+                modal.style.display = "none"
+            }
+
+            const rows = document.querySelectorAll('tr[data-id]')
+            let carts = []
+            let totalCost = 0
+
+            rows.forEach(row => {
+                const piece = parseInt(row.querySelector('.piece').value)
+
+                if (piece > 0) {
+                    const id = parseInt(row.getAttribute('data-id'))
+                    const name = row.getAttribute('data-name')
+                    const price = parseFloat(row.getAttribute('data-price'))
+                    const cost = piece * price
+
+                    carts.push({
+                        product_id: id,
+                        name,
+                        piece,
+                        cost: price * piece
+                    })
+
+                    totalCost += cost
+                }
+            })
+
+
+
+
+            modalBody.innerHTML = ""
+            modalControl.innerHTML = ""
+
+            const title = document.createElement("h2")
+            title.textContent = "Cart"
+            modalBody.appendChild(title)
+
+            const cartList = document.createElement("ul")
+            cartList.style.textAlign = "left"
+
+            carts.forEach(item => {
+                const li = document.createElement("li")
+                li.innerHTML = `
+                    ${String(item.product_id).padStart(3, '0')} - ${item.name}
+                    <br>
+                    ${item.piece} pcs = ${item.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿
+                    <br><br>
+                `
+                cartList.appendChild(li)
+            })
+
+            modalBody.appendChild(cartList)
+
+            const confirmBtn = btn("Confirm", () => {
+                fetch("http://localhost:3000/order/create", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(carts)
+                })
+
+                alert("Payment sent")
+                closeModal()
+            })
+
+            const closeBtn = btn("Close", closeModal)
+
+            modal.style.display = "flex"
+            modalControl.appendChild(confirmBtn)
+            modalControl.appendChild(closeBtn)
+        })
+    </script>
+
+
+
+    <div id="modal" style="
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 780px;
+    height: 100%;
+    background: #00000080;
+    justify-content: center;
+    align-items: flex-start;
+">
+        <div style="
+        background: #fff;
+        margin-top: 48px;
+        padding: 16px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        width:480px;
+        max-height: 80%;
+        overflow:auto;
+    ">
+            <div id="modalBody"></div>
+            <div id="modalControl"></div>
+        </div>
+    </div>
+
+
+
+    <div>
+        <a href="/shop?page=1" style="text-decoration: none; color: black; margin: 0 4px;">
+            &lt;&lt;
+        </a>
+
+        <a href="/shop?page=<%= page > 1 ? page - 1 : 1 %>" style="text-decoration: none; color: black; margin: 0 4px;">
+            &lt;
+        </a>
+
+        Page <%= page%> of <%= totalPages %>
+
+                <a href="/shop?page=<%= page < totalPages ? page + 1 : totalPages %>"
+                    style="text-decoration: none; color: black; margin: 0 4px;">
+                    &gt;
+                </a>
+
+                <a href="/shop?page=<%= totalPages %>" style="text-decoration: none; color: black; margin: 0 4px;">
+                    &gt;&gt;
+                </a>
+    </div>
+</body>
+
+</html>

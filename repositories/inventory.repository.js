@@ -1,21 +1,16 @@
-export class InventoryRepository {
+//clear
+
+export class ProductRepository {
     constructor(Product) {
         this.Product = Product
     }
 
     getPage = async (limit, offset, order) => {
-        const pageData = await this.Product.findAndCountAll({
+        return await this.Product.findAndCountAll({
             limit,
             offset,
             order
         })
-
-        const totalPages = Math.max(1, Math.ceil(pageData.count / limit))
-
-        return {
-            totalPages,
-            data: pageData.rows
-        }
     }
 
     getImage = async (id) => {

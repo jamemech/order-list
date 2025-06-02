@@ -1,3 +1,5 @@
+//clear
+
 import { DataTypes } from 'sequelize'
 
 export class Product {
@@ -34,7 +36,7 @@ export class Product {
                 },
             },
         }, {
-            tableName: 'Products',
+            tableName: 'products',
             timestamps: true,
             underscored: true,
         })
