@@ -19,12 +19,12 @@ export class InventoryController {
     getInventoryPageCtrl = async (req, res) => {
         try {
             const page = parseInt(req.query.page) || 1
+            const { data, totalPages } = await this.service.getInventoryPageServ(page)
 
-            const { totalPages, data } = await this.service.getInventoryPageServ(page)
             res.render('inventory', {
                 data,
-                page,
-                totalPages
+                totalPages,
+                page
             })
 
         } catch (error) {

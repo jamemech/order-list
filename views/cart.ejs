@@ -3,46 +3,76 @@
 
 <head>
     <title>Cart</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            border: 1px solid #eee;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        td {
+            height: 90px;
+            word-break: break-all;
+        }
+
+        input {
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
     <h1 style="font-size: 26px;">Cart</h1>
 
-    <div style="height: 24px"></div>
-
-
+    <a style="color: black; text-decoration: underline; font-size: 20px;">Order</a>
 
     <table>
         <tr>
             <th style="width: 40px;">ID</th>
             <th style="width: 120px;">Name</th>
+            <th style="width: 120px;">Price</th>
             <th style="width: 120px;">Piece</th>
             <th style="width: 120px;">Cost</th>
             <th style="width: 120px;">Date</th>
         </tr>
 
-        <% data.forEach(product=> { %>
-            <tr data-id="<%= product.product_id %>" data-name="<%= product.name %>" data-piece="<%= product.piece %>"
-                data-cost="<%= product.cost %>" data-date="<%= product.date %>">
+        <% data.forEach(cart=> { %>
+            <tr data-id="<%= cart.product_id %>" data-name="<%= cart.name %>" data-piece="<%= cart.piece %>"
+                data-cost="<%= cart.cost %>" data-date="<%= cart.date %>">
 
                 <td>
-                    <%= String(product.product_id).padStart(3, '0' ) %>
+                    <%= String(cart.product_id).padStart(3, '0' ) %>
                 </td>
 
                 <td style="text-align: left;">
-                    <%= product.name %>
-                </td>
-
-                <td>
-                    <%= product.piece %>
+                    <%= cart.name %>
                 </td>
 
                 <td style="text-align: right;">
-                    <%= product.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 }) %> ฿
+                    <%= cart.price.toLocaleString('th-TH', { minimumFractionDigits: 2 }) %> ฿
                 </td>
 
                 <td>
-                    <%= product.date %>
+                    <%= cart.piece %>
+                </td>
+
+                <td style="text-align: right;">
+                    <%= cart.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 }) %> ฿
+                </td>
+
+                <td>
+                    <%= cart.date %>
                 </td>
             </tr>
             <% }) %>

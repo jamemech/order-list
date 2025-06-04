@@ -1,6 +1,6 @@
 //clear
 
-export class ProductRepository {
+export class InventoryRepository {
     constructor(Product) {
         this.Product = Product
     }
