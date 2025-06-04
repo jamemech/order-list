@@ -15,6 +15,7 @@ export default {
         require: true,
         rejectUnauthorized: false
       }
-    }
+    },
+    logging: false
   }
 }
