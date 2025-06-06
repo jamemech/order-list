@@ -11,8 +11,8 @@ export class InventoryController {
         router.get('/inventory', this.getInventoryPageCtrl)
         router.post('/inventory/create', inventoryValidation(), handleValidationErrors, this.createInventoryCtrl)
         router.put('/inventory/edit', inventoryValidation(), handleValidationErrors, this.updateInventoryCtrl)
-        router.put('/inventory/status', this.updateInventoryStatusCtrl)
-        router.put('/inventory/upload', this.upload.single('image'), this.updateInventoryImageCtrl)
+        router.patch('/inventory/status', this.updateInventoryStatusCtrl)
+        router.patch('/inventory/upload', this.upload.single('image'), this.updateInventoryImageCtrl)
         router.delete('/inventory/delete', this.deleteInventoryCtrl)
     }
 
@@ -36,7 +36,7 @@ export class InventoryController {
     createInventoryCtrl = async (req, res) => {
         try {
             await this.service.createInventoryServ(req.body)
-            res.status(201).send('Create product')
+            res.status(201).send('Create inventory')
 
         } catch (error) {
             console.error('Error:', error)
@@ -46,8 +46,8 @@ export class InventoryController {
 
     updateInventoryCtrl = async (req, res) => {
         try {
-            await this.service.updateInventoryServ(req.body.id, req.body)
-            res.status(200).send('Update product')
+            await this.service.updateInventoryServ(req.body)
+            res.status(200).send('Update inventory')
 
         } catch (error) {
             console.error('Error:', error)
@@ -57,10 +57,10 @@ export class InventoryController {
 
     updateInventoryStatusCtrl = async (req, res) => {
         try {
-            await this.service.updateInventoryStatusServ(req.body.id, req.body.status)
-            res.status(204).send('Update status')
+            await this.service.updateInventoryStatusServ(req.body)
+            res.status(200).send('Update inventory status')
 
-        } catch {
+        } catch (error) {
             console.error('Error:', error)
             res.status(500).send('Internal Server Error')
         }
@@ -69,7 +69,7 @@ export class InventoryController {
     updateInventoryImageCtrl = async (req, res) => {
         try {
             await this.service.updateInventoryImageServ(req.body.id, req.file.path)
-            res.status(200).send('Upload image')
+            res.status(200).send('Update inventory image')
 
         } catch (error) {
             console.error('Error:', error)
@@ -80,7 +80,7 @@ export class InventoryController {
     deleteInventoryCtrl = async (req, res) => {
         try {
             await this.service.deleteInventoryServ(req.body.id)
-            res.status(204).send('Delete product')
+            res.status(204).send()
 
         } catch (error) {
             console.error('Error:', error)

@@ -96,78 +96,62 @@
             const modalBody = document.getElementById("modalBody")
             const modalControl = document.getElementById("modalControl")
 
-            const closeModal = () => {
-                modal.style.display = "none"
-            }
-
             const rows = document.querySelectorAll('tr[data-id]')
-            let carts = []
+            let cartItems = []
             let totalCost = 0
 
             rows.forEach(row => {
                 const piece = parseInt(row.querySelector('.piece').value)
-
                 if (piece > 0) {
-                    const id = parseInt(row.getAttribute('data-id'))
-                    const name = row.getAttribute('data-name')
-                    const price = parseFloat(row.getAttribute('data-price'))
+                    const product_id = parseInt(row.dataset.id)
+                    const name = row.dataset.name
+                    const price = parseFloat(row.dataset.price)
                     const cost = piece * price
 
-                    carts.push({
-                        product_id: id,
-                        name,
-                        piece,
-                        cost: price * piece
-                    })
-
+                    cartItems.push({ product_id, name, price, piece, cost })
                     totalCost += cost
                 }
             })
 
+            // แสดงรายการสินค้าใน modal
+            modalBody.innerHTML = `<h2>Cart</h2>`
+            const list = document.createElement("ul")
+            list.style.textAlign = "left"
 
-
-
-            modalBody.innerHTML = ""
-            modalControl.innerHTML = ""
-
-            const title = document.createElement("h2")
-            title.textContent = "Cart"
-            modalBody.appendChild(title)
-
-            const cartList = document.createElement("ul")
-            cartList.style.textAlign = "left"
-
-            carts.forEach(item => {
+            cartItems.forEach(item => {
                 const li = document.createElement("li")
                 li.innerHTML = `
-                    ${String(item.product_id).padStart(3, '0')} - ${item.name}
-                    <br>
-                    ${item.piece} pcs = ${item.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿
-                    <br><br>
-                `
-                cartList.appendChild(li)
+            ${String(item.product_id).padStart(3, '0')} - ${item.name}<br>
+            ${item.piece} pcs = ${item.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿
+            <br><br>
+        `
+                list.appendChild(li)
             })
 
-            modalBody.appendChild(cartList)
+            modalBody.appendChild(list)
+
+            // ปุ่ม confirm และ close
+            modalControl.innerHTML = ""
 
             const confirmBtn = btn("Confirm", () => {
                 fetch("http://localhost:3000/order/create", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(carts)
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ cartItems, totalCost })
                 })
 
                 alert("Payment sent")
-                closeModal()
+                modal.style.display = "none"
             })
 
-            const closeBtn = btn("Close", closeModal)
+            const closeBtn = btn("Close", () => {
+                modal.style.display = "none"
+            })
 
-            modal.style.display = "flex"
             modalControl.appendChild(confirmBtn)
             modalControl.appendChild(closeBtn)
+
+            modal.style.display = "flex"
         })
     </script>
 

@@ -11,12 +11,12 @@ export class ShopService {
         const order = [['type', 'ASC']]
         const where = { status: 'Active' }
 
-        const pageData = await this.repository.getPage(limit, offset, order, where)
-        const totalPages = Math.max(1, Math.ceil(pageData.count / limit))
+        const { rows, count } = await this.repository.getPage(limit, offset, order, where)
+        const totalPages = Math.max(1, Math.ceil(count / limit))
 
         return {
-            totalPages,
-            data: pageData.rows
+            data: rows,
+            totalPages
         }
     }
 }

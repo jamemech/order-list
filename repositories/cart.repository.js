@@ -1,3 +1,5 @@
+//clear
+
 export class CartRepository {
     constructor(Cart) {
         this.Cart = Cart
@@ -10,4 +12,6 @@ export class CartRepository {
             order
         })
     }
+
+    createCarts = (cartsData) => this.Cart.bulkCreate(cartsData)
 }

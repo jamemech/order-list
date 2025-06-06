@@ -224,8 +224,10 @@
                 const id = row.dataset.id
                 const status = select.value
 
+                console.log('Update status:', { id, status })
+
                 await fetch("http://localhost:3000/inventory/status", {
-                    method: "PUT",
+                    method: "PATCH",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ id, status })
                 })
@@ -251,7 +253,7 @@
                     formData.append("image", file)
 
                     await fetch("http://localhost:3000/inventory/upload", {
-                        method: "PUT",
+                        method: "PATCH",
                         body: formData
                     })
 

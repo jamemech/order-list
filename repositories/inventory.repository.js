@@ -18,16 +18,15 @@ export class InventoryRepository {
         return product.image
     }
 
-    createProduct = (product) => this.Product.create(product)
+    createProduct = (productData) => this.Product.create(productData)
 
-    updateProduct = (id, product) => this.Product.update(
-        product,
-        { where: { id } })
+    updateProduct = (id, productData) => this.Product.update(productData, {
+        where: { id }
+    })
 
-    updateStatus = (id, status) => this.Product.update(
-        { status },
-        { where: { id } }
-    )
+    updateStatus = (id, status) => this.Product.update({ status }, {
+        where: { id }
+    })
 
     updateImage = (id, image) => this.Product.update({ image }, {
         where: { id }
