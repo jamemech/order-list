@@ -4,8 +4,13 @@ import path from 'path'
 import 'dotenv/config'
 import config from './configs/db.config.js'
 import { Connection } from './connections/sequelize.connection.js'
+import { Order } from './models/order.js'
 import { Product } from './models/product.js'
 import { Cart } from './models/cart.js'
+
+import { OrderRepository } from './repositories/order.repository.js'
+import { OrderService } from './services/order.service.js'
+import { OrderController } from './controllers/order.controller.js'
 
 import { InventoryRepository } from './repositories/inventory.repository.js'
 import { InventoryService } from './services/inventory.service.js'
@@ -23,6 +28,7 @@ const env = process.env.NODE_ENV || 'development'
 const db = new Connection(config, env)
 const productDb = new Product(db)
 const cartDb = new Cart(db)
+const orderDb = new Order(db)
 
 const app = express()
 const router = Router()
@@ -61,6 +67,11 @@ new ShopController(shopSvc, router)
 const cartRepo = new CartRepository(cartDb)
 const cartSvc = new CartService(cartRepo)
 new CartController(cartSvc, router)
+
+const orderRepo = new OrderRepository(orderDb)
+const orderSvc = new OrderService(orderRepo, cartRepo)
+new OrderController(orderSvc, router)
+
 
 app.use(router)
 

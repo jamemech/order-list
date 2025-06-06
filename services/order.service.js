@@ -1,7 +1,9 @@
+//clear
+
 export class OrderService {
-    constructor(cartRepository, orderRepository) {
-        this.cartRepository = cartRepository
+    constructor(orderRepository, cartRepository) {
         this.orderRepository = orderRepository
+        this.cartRepository = cartRepository
     }
 
     getOrderPageServ = (page) => {
@@ -12,18 +14,20 @@ export class OrderService {
         return this.orderRepository.getPage(limit, offset, order)
     }
 
-    createOrderServ = async (carts) => {
-        const orderCreated = await this.orderRepository.createOrder("root04")
-        const cartCreated = carts.map(item => {
-            return {
-                order_id: orderCreated.dataValues.id,
-                ...item
-            }
-        })
+    createOrderServ = async ({ cartItems, totalCost }) => {
+        const orderData = {
+            username: "root04",
+            total_cost: totalCost
+        }
 
-        await this.cartRepository.createCart(cartCreated)
+        const order = await this.orderRepository.createOrder(orderData)
+
+        const cartsData = cartItems.map(item => ({
+            order_id: order.dataValues.id,
+            ...item
+        }))
+
+        await this.cartRepository.createCarts(cartsData)
     }
-
-
 }
 

@@ -13,36 +13,36 @@ export class InventoryService {
         const offset = limit * (page - 1)
         const order = [['id', 'DESC']]
 
-        const pageData = await this.repository.getPage(limit, offset, order)
-        const totalPages = Math.max(1, Math.ceil(pageData.count / limit))
+        const { rows, count } = await this.repository.getPage(limit, offset, order)
+        const totalPages = Math.max(1, Math.ceil(count / limit))
 
         return {
-            totalPages,
-            data: pageData.rows
+            data: rows,
+            totalPages
         }
     }
 
-    createInventoryServ = (product) => this.repository.createProduct(product)
+    createInventoryServ = (productData) => this.repository.createProduct(productData)
 
-    updateInventoryServ = (id, product) => this.repository.updateProduct(id, product)
+    updateInventoryServ = async ({ id, ...productData }) => this.repository.updateProduct(id, productData)
 
-    updateInventoryStatusServ = async (id, status) => this.repository.updateStatus(id, status)
+    updateInventoryStatusServ = async ({ id, status }) => this.repository.updateStatus(id, status)
 
-    deleteImage = async (id) => {
+    updateInventoryImageServ = async (id, image) => {
+        await this._deleteImage(id)
+        await this.repository.updateImage(id, image)
+    }
+
+    deleteInventoryServ = async (id) => {
+        await this._deleteImage(id)
+        await this.repository.deleteProduct(id)
+    }
+
+    _deleteImage = async (id) => {
         const imagePath = await this.repository.getImage(id)
 
         if (imagePath && fs.existsSync(path.resolve(imagePath))) {
             fs.unlinkSync(path.resolve(imagePath))
         }
-    }
-
-    updateInventoryImageServ = async (id, image) => {
-        await this.deleteImage(id)
-        await this.repository.updateImage(id, image)
-    }
-
-    deleteInventoryServ = async (id) => {
-        await this.deleteImage(id)
-        await this.repository.deleteProduct(id)
     }
 }
