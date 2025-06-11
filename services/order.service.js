@@ -6,12 +6,18 @@ export class OrderService {
         this.cartRepository = cartRepository
     }
 
-    getOrderPageServ = (page) => {
-        const limit = 5
+    getOrderPageServ = async (page) => {
+        const limit = 10
         const offset = limit * (page - 1)
         const order = [['created_at', 'DESC']]
 
-        return this.orderRepository.getPage(limit, offset, order)
+        const { rows, count } = await this.orderRepository.getPage(limit, offset, order)
+        const totalPages = Math.max(1, Math.ceil(count / limit))
+
+        return {
+            data: rows,
+            totalPages
+        }
     }
 
     createOrderServ = async ({ cartItems, totalCost }) => {
@@ -29,5 +35,8 @@ export class OrderService {
 
         await this.cartRepository.createCarts(cartsData)
     }
+
+
+    updateOrderStatusServ = async ({ id, status }) => this.orderRepository.updateStatus(id, status)
 }
 

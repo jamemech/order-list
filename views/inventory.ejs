@@ -22,7 +22,7 @@
         }
 
         td {
-            height: 90px;
+            height: 87px;
             word-break: break-all;
         }
 
@@ -85,6 +85,7 @@
             </tr>
             <% }) %>
     </table>
+    <br>
 
 
 
@@ -224,8 +225,6 @@
                 const id = row.dataset.id
                 const status = select.value
 
-                console.log('Update status:', { id, status })
-
                 await fetch("http://localhost:3000/inventory/status", {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
@@ -239,13 +238,13 @@
         document.querySelectorAll(".upload-btn").forEach(button => {
             button.addEventListener("click", () => {
                 const id = button.closest("tr").dataset.id
-                const upload = document.createElement("upload")
-                upload.type = "file"
-                upload.accept = "image/*"
-                upload.click()
+                const input = document.createElement("input")
+                input.type = "file"
+                input.accept = "image/*"
+                input.click()
 
-                upload.addEventListener("change", async () => {
-                    const file = upload.files[0]
+                input.addEventListener("change", async () => {
+                    const file = input.files[0]
                     if (!file) return
 
                     const formData = new FormData()

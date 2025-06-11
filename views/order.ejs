@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Order</title>
+
+    <style>
+        table {
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            border: 1px solid #eee;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        td {
+            height: 35px;
+            word-break: break-all;
+        }
+
+        input {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="font-size: 26px;">Order</h1>
+
+    <a href="/inventory"
+        style="color: blue; text-decoration: underline; font-size: 20px; margin-right: 4px;">Inventory</a>
+    <a href="/shop" style="color: blue; text-decoration: underline; font-size: 20px; margin-right: 4px;">Shop</a>
+    <a href="/cart" style="color: blue; text-decoration: underline; font-size: 20px; margin-right: 4px;">Cart</a>
+
+    <table>
+        <tr>
+            <th style="width: 40px;">ID</th>
+            <th style="width: 120px;">Name</th>
+            <th style="width: 120px;">Total Cost</th>
+            <th style="width: 120px;">Date</th>
+            <th style="width: 120px;">Status</th>
+        </tr>
+
+        <% data.forEach(order=> { %>
+            <tr data-id="<%= order.id %>">
+                <td>
+                    <a href="/cart?order_id=<%= order.id %>">
+                        <%= order.id %>
+                    </a>
+                </td>
+
+                <td style="text-align: left;">
+                    <%= order.username %>
+                </td>
+
+                <td style="text-align: right;">
+                    <%= order.total_cost.toLocaleString('th-TH', { minimumFractionDigits: 2 }) %> ฿
+                </td>
+
+                <td>
+                    <%= order.createdAt.toLocaleString('th-TH', { year: 'numeric' , month: '2-digit' , day: '2-digit' ,
+                        hour: '2-digit' , minute: '2-digit' , hour12: false }) %>
+                </td>
+
+                <td style="text-align: left;">
+                    <select name="status" class="select-status">
+                        <option value="Paid" <%=order.status==='Paid' ? 'selected' : '' %>>Paid</option>
+                        <option value="Refunded" <%=order.status==='Refunded' ? 'selected' : '' %>>Refunded</option>
+                        <option value="Complete" <%=order.status==='Complete' ? 'selected' : '' %>>Complete</option>
+                    </select>
+                </td>
+            </tr>
+            <% }) %>
+    </table>
+    <br>
+
+    <script>
+        document.querySelectorAll(".select-status").forEach(select => {
+            select.addEventListener("change", async () => {
+                const row = select.closest("tr")
+                const id = row.dataset.id
+                const status = select.value
+
+                await fetch("http://localhost:3000/order/status", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id, status })
+                })
+            })
+        })
+    </script>
+
+    <div>
+        <a href="/order?page=1" style="text-decoration: none; color: black; margin: 0 4px;">
+            &lt;&lt;
+        </a>
+
+        <a href="/order?page=<%= page > 1 ? page - 1 : 1 %>"
+            style="text-decoration: none; color: black; margin: 0 4px;">
+            &lt;
+        </a>
+
+        Page <%= page%> of <%= totalPages %>
+
+                <a href="/order?page=<%= page < totalPages ? page + 1 : totalPages %>"
+                    style="text-decoration: none; color: black; margin: 0 4px;">
+                    &gt;
+                </a>
+
+                <a href="/order?page=<%= totalPages %>" style="text-decoration: none; color: black; margin: 0 4px;">
+                    &gt;&gt;
+                </a>
+    </div>
+</body>
+
+</html>

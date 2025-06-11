@@ -5,11 +5,12 @@ export class CartRepository {
         this.Cart = Cart
     }
 
-    getPage = async (limit, offset, order) => {
+    getPage = async (limit, offset, order, where) => {
         return await this.Cart.findAndCountAll({
             limit,
             offset,
-            order
+            order,
+            where
         })
     }
 

@@ -14,4 +14,8 @@ export class OrderRepository {
     }
 
     createOrder = (orderData) => this.Order.create(orderData)
+
+    updateStatus = (id, status) => this.Order.update({ status }, {
+        where: { id }
+    })
 }

@@ -9,8 +9,7 @@ export class CartController {
 
     getCartPageCtrl = async (req, res) => {
         try {
-            const page = parseInt(req.query.page) || 1
-            const { data, totalPages } = await this.service.getCartPageServ(page)
+            const { data, totalPages, page } = await this.service.getCartPageServ(req.query)
 
             res.render('cart', {
                 data,

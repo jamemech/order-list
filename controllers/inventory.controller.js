@@ -39,7 +39,7 @@ export class InventoryController {
             res.status(201).send('Create inventory')
 
         } catch (error) {
-            console.error('Error:', error)
+            console.error(error)
             res.status(500).send('Internal Server Error')
         }
     }
@@ -50,7 +50,7 @@ export class InventoryController {
             res.status(200).send('Update inventory')
 
         } catch (error) {
-            console.error('Error:', error)
+            console.error(error)
             res.status(500).send('Internal Server Error')
         }
     }
@@ -61,7 +61,7 @@ export class InventoryController {
             res.status(200).send('Update inventory status')
 
         } catch (error) {
-            console.error('Error:', error)
+            console.error(error)
             res.status(500).send('Internal Server Error')
         }
     }
@@ -72,7 +72,7 @@ export class InventoryController {
             res.status(200).send('Update inventory image')
 
         } catch (error) {
-            console.error('Error:', error)
+            console.error(error)
             res.status(500).send('Internal Server Error')
         }
     }
@@ -83,7 +83,7 @@ export class InventoryController {
             res.status(204).send()
 
         } catch (error) {
-            console.error('Error:', error)
+            console.error(error)
             res.status(500).send('Internal Server Error')
         }
     }

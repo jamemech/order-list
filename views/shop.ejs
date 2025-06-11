@@ -22,7 +22,7 @@
         }
 
         td {
-            height: 90px;
+            height: 87px;
             word-break: break-all;
         }
 
@@ -78,6 +78,7 @@
             </tr>
             <% }) %>
     </table>
+    <br>
 
 
 
@@ -108,7 +109,7 @@
                     const price = parseFloat(row.dataset.price)
                     const cost = piece * price
 
-                    cartItems.push({ product_id, name, price, piece, cost })
+                    cartItems.push({ product_id, name, piece, cost })
                     totalCost += cost
                 }
             })
@@ -121,8 +122,8 @@
             cartItems.forEach(item => {
                 const li = document.createElement("li")
                 li.innerHTML = `
-            ${String(item.product_id).padStart(3, '0')} - ${item.name}<br>
-            ${item.piece} pcs = ${item.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿
+            (${String(item.product_id).padStart(3, '0')}) ${item.name}<br>
+            ${item.piece} pcs - ${item.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿
             <br><br>
         `
                 list.appendChild(li)

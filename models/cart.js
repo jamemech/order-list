@@ -35,10 +35,6 @@ export class Cart {
                 allowNull: false,
                 type: DataTypes.STRING,
             },
-            price: {
-                allowNull: false,
-                type: DataTypes.FLOAT,
-            },
             piece: {
                 allowNull: false,
                 type: DataTypes.INTEGER,

@@ -33,10 +33,6 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.STRING,
             },
-            price: {
-                allowNull: false,
-                type: Sequelize.FLOAT,
-            },
             piece: {
                 allowNull: false,
                 type: Sequelize.INTEGER,
