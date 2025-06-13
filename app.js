@@ -1,6 +1,7 @@
 import express, { Router } from 'express'
 import multer from 'multer'
 import path from 'path'
+import fs from 'fs'
 import 'dotenv/config'
 import config from './configs/db.config.js'
 import { Connection } from './connections/sequelize.connection.js'
@@ -36,8 +37,13 @@ const port = 3000
 
 const upload = multer({
     storage: multer.diskStorage({
-        destination: (req, file, cb) => cb(null, 'uploads'),
-        filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+        destination: (req, file, cb) => {
+            const dir = path.resolve('uploads')
+            fs.mkdirSync(dir, { recursive: true })
+            cb(null, dir)
+        },
+        filename: (req, file, cb) =>
+            cb(null, `${Date.now()}${path.extname(file.originalname)}`)
     })
 })
 

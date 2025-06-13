@@ -10,24 +10,24 @@ module.exports = {
                 type: Sequelize.INTEGER,
             },
             order_id: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'orders',
                     key: 'id',
                 },
                 onUpdate: 'RESTRICT',
-                onDelete: 'RESTRICT',
+                onDelete: 'SET NULL',
             },
             product_id: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.INTEGER,
                 references: {
                     model: 'products',
                     key: 'id',
                 },
                 onUpdate: 'RESTRICT',
-                onDelete: 'RESTRICT',
+                onDelete: 'SET NULL',
             },
             name: {
                 allowNull: false,

@@ -12,24 +12,24 @@ export class Cart {
                 type: DataTypes.INTEGER,
             },
             order_id: {
-                allowNull: false,
+                allowNull: true,
                 type: DataTypes.INTEGER,
                 references: {
                     model: 'Order',
                     key: 'id',
                 },
                 onUpdate: 'RESTRICT',
-                onDelete: 'RESTRICT',
+                onDelete: 'SET NULL',
             },
             product_id: {
-                allowNull: false,
+                allowNull: true,
                 type: DataTypes.INTEGER,
                 references: {
                     model: 'Product',
                     key: 'id',
                 },
                 onUpdate: 'RESTRICT',
-                onDelete: 'RESTRICT',
+                onDelete: 'SET NULL',
             },
             name: {
                 allowNull: false,
