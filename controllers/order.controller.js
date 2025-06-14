@@ -29,12 +29,12 @@ export class OrderController {
 
     createOrderCtrl = async (req, res) => {
         try {
-            await this.service.createOrderServ(req.body)
-            res.status(201).send('Create order')
+            const order = await this.service.createOrderServ(req.body)
+            res.status(201).json({ order_id: order.dataValues.id, message: 'Create order' })
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 

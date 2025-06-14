@@ -1,6 +1,3 @@
-*Shop > Type, Piece, Payment
-*Order > ID
-
 Order (id, username, total_cost, date, status)
     
     Order

@@ -84,15 +84,13 @@
 
     <script>
         const btn = (text, click) => {
-            const btn = document.createElement("button")
-            btn.textContent = text
-            btn.onclick = click
-            return btn
+            const button = document.createElement("button")
+            button.textContent = text
+            button.onclick = click
+            return button
         }
 
-
-
-        document.querySelector(".cart-btn").addEventListener("click", () => {
+        document.querySelector(".cart-btn").addEventListener("click", async () => {
             const modal = document.getElementById("modal")
             const modalBody = document.getElementById("modalBody")
             const modalControl = document.getElementById("modalControl")
@@ -114,35 +112,38 @@
                 }
             })
 
-            // แสดงรายการสินค้าใน modal
+            if (cartItems.length === 0) {
+                return
+            }
+
             modalBody.innerHTML = `<h2>Cart</h2>`
             const list = document.createElement("ul")
+            list.style.listStyle = "none"
             list.style.textAlign = "left"
 
             cartItems.forEach(item => {
                 const li = document.createElement("li")
                 li.innerHTML = `
-            (${String(item.product_id).padStart(3, '0')}) ${item.name}<br>
-            ${item.piece} pcs - ${item.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿
-            <br><br>
-        `
+                    (${String(item.product_id).padStart(3, '0')}) ${item.name}<br>
+                    ${item.piece} pcs - ${item.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿
+                    <br><br>
+                    `
                 list.appendChild(li)
             })
 
             modalBody.appendChild(list)
 
-            // ปุ่ม confirm และ close
             modalControl.innerHTML = ""
 
-            const confirmBtn = btn("Confirm", () => {
-                fetch("http://localhost:3000/order/create", {
+            const confirmBtn = btn("Confirm", async () => {
+                const response = await fetch("http://localhost:3000/order/create", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ cartItems, totalCost })
                 })
-
-                alert("Payment sent")
-                modal.style.display = "none"
+                const data = await response.json()
+                const orderId = data.order_id
+                window.location.href = `http://localhost:3000/cart?order_id=${orderId}`
             })
 
             const closeBtn = btn("Close", () => {
