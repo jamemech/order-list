@@ -7,15 +7,13 @@ export class CartService {
 
     getCartPageServ = async (query) => {
         const page = parseInt(query.page) || 1
-        const orderId = query.order_id
-
         const limit = 10
         const offset = limit * (page - 1)
         const order = [['created_at', 'DESC'], ['product_id', 'ASC']]
-        const where = {}
+        let where = {}
 
-        if (orderId) {
-            where.order_id = orderId
+        if (query.order_id) {
+            where.order_id = query.order_id
         }
 
         const { rows, count } = await this.repository.getPage(limit, offset, order, where)
@@ -27,6 +25,4 @@ export class CartService {
             page
         }
     }
-
-
 }

@@ -1,11 +1,10 @@
-//clear
-
 export class ShopService {
     constructor(repository) {
         this.repository = repository
     }
 
-    getShopPageServ = async (page) => {
+    getShopPageServ = async (query) => {
+        const page = parseInt(query.page) || 1
         const limit = 5
         const offset = limit * (page - 1)
         const order = [['type', 'ASC']]
@@ -16,7 +15,8 @@ export class ShopService {
 
         return {
             data: rows,
-            totalPages
+            totalPages,
+            page
         }
     }
 }

@@ -9,6 +9,9 @@ import { Order } from './models/order.js'
 import { Product } from './models/product.js'
 import { Cart } from './models/cart.js'
 
+import { LoginService } from './services/login.service.js'
+import { LoginController } from './controllers/login.controller.js'
+
 import { OrderRepository } from './repositories/order.repository.js'
 import { OrderService } from './services/order.service.js'
 import { OrderController } from './controllers/order.controller.js'
@@ -61,6 +64,9 @@ db.authenticate()
         console.error('Database connect error:', error)
         setImmediate(() => process.exit(1))
     })
+
+const loginSvc = new LoginService()
+new LoginController(loginSvc, router)
 
 const inventoryRepo = new InventoryRepository(productDb)
 const inventorySvc = new InventoryService(inventoryRepo)

@@ -1,5 +1,3 @@
-//clear
-
 export class CartController {
     constructor(service, router) {
         this.service = service
@@ -19,7 +17,7 @@ export class CartController {
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 }

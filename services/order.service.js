@@ -1,12 +1,11 @@
-//clear
-
 export class OrderService {
     constructor(orderRepository, cartRepository) {
         this.orderRepository = orderRepository
         this.cartRepository = cartRepository
     }
 
-    getOrderPageServ = async (page) => {
+    getOrderPageServ = async (query) => {
+        const page = parseInt(query.page) || 1
         const limit = 10
         const offset = limit * (page - 1)
         const order = [['created_at', 'DESC']]
@@ -16,7 +15,8 @@ export class OrderService {
 
         return {
             data: rows,
-            totalPages
+            totalPages,
+            page
         }
     }
 

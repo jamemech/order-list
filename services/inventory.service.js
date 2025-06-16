@@ -1,5 +1,3 @@
-//clear
-
 import fs from 'fs'
 import path from 'path'
 
@@ -8,7 +6,8 @@ export class InventoryService {
         this.repository = repository
     }
 
-    getInventoryPageServ = async (page) => {
+    getInventoryPageServ = async (query) => {
+        const page = parseInt(query.page) || 1
         const limit = 5
         const offset = limit * (page - 1)
         const order = [['id', 'DESC']]
@@ -18,7 +17,8 @@ export class InventoryService {
 
         return {
             data: rows,
-            totalPages
+            totalPages,
+            page
         }
     }
 

@@ -1,5 +1,3 @@
-//clear
-
 import { inventoryValidation } from '../dtos/inventory.js'
 import { handleValidationErrors } from '../utils/validation.js'
 
@@ -18,8 +16,7 @@ export class InventoryController {
 
     getInventoryPageCtrl = async (req, res) => {
         try {
-            const page = parseInt(req.query.page) || 1
-            const { data, totalPages } = await this.service.getInventoryPageServ(page)
+            const { data, totalPages, page } = await this.service.getInventoryPageServ(req.query)
 
             res.render('inventory', {
                 data,
@@ -29,51 +26,51 @@ export class InventoryController {
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 
     createInventoryCtrl = async (req, res) => {
         try {
             await this.service.createInventoryServ(req.body)
-            res.status(201).send('Create inventory')
+            res.status(201).json({ message: 'Create inventory' })
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 
     updateInventoryCtrl = async (req, res) => {
         try {
             await this.service.updateInventoryServ(req.body)
-            res.status(200).send('Update inventory')
+            res.status(200).json({ message: 'Update inventory' })
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 
     updateInventoryStatusCtrl = async (req, res) => {
         try {
             await this.service.updateInventoryStatusServ(req.body)
-            res.status(200).send('Update inventory status')
+            res.status(200).json({ message: 'Update inventory status' })
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 
     updateInventoryImageCtrl = async (req, res) => {
         try {
             await this.service.updateInventoryImageServ(req.body.id, req.file.path)
-            res.status(200).send('Update inventory image')
+            res.status(200).json({ message: 'Update inventory image' })
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 
@@ -84,7 +81,7 @@ export class InventoryController {
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 }

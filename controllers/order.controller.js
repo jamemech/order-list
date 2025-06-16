@@ -1,5 +1,3 @@
-//clear
-
 export class OrderController {
     constructor(service, router) {
         this.service = service
@@ -12,8 +10,7 @@ export class OrderController {
 
     getOrderPageCtrl = async (req, res) => {
         try {
-            const page = parseInt(req.query.page) || 1
-            const { data, totalPages } = await this.service.getOrderPageServ(page)
+            const { data, totalPages, page } = await this.service.getOrderPageServ(req.query)
 
             res.render('order', {
                 data,
@@ -23,7 +20,7 @@ export class OrderController {
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 
@@ -41,11 +38,11 @@ export class OrderController {
     updateOrderStatusCtrl = async (req, res) => {
         try {
             await this.service.updateOrderStatusServ(req.body)
-            res.status(200).send('Update order status')
+            res.status(200).json({ message: 'Update order status' })
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 }

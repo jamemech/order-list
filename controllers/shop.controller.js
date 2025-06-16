@@ -1,5 +1,3 @@
-//clear
-
 export class ShopController {
     constructor(service, router) {
         this.service = service
@@ -9,8 +7,7 @@ export class ShopController {
 
     getShopPageCtrl = async (req, res) => {
         try {
-            const page = parseInt(req.query.page) || 1
-            const { data, totalPages } = await this.service.getShopPageServ(page)
+            const { data, totalPages, page } = await this.service.getShopPageServ(req.query)
 
             res.render('shop', {
                 data,
@@ -20,7 +17,7 @@ export class ShopController {
 
         } catch (error) {
             console.error(error)
-            res.status(500).send('Internal Server Error')
+            res.status(500).json({ error: 'Internal Server Error' })
         }
     }
 }
