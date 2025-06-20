@@ -1,5 +1,3 @@
-//clear
-
 import { DataTypes } from 'sequelize'
 
 export class Order {
@@ -11,9 +9,10 @@ export class Order {
                 primaryKey: true,
                 type: DataTypes.INTEGER,
             },
-            username: {
+            transaction: {
                 allowNull: false,
                 type: DataTypes.STRING,
+                unique: true,
             },
             total_cost: {
                 allowNull: false,

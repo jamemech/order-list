@@ -10,5 +10,5 @@ export class CartRepository {
         where
     })
 
-    createCarts = (cartsData) => this.Cart.bulkCreate(cartsData)
+    createCarts = (carts) => this.Cart.bulkCreate(carts)
 }

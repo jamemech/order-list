@@ -1,5 +1,3 @@
-//clear
-
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('orders', {
@@ -9,9 +7,10 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.INTEGER,
             },
-            username: {
+            transaction: {
                 allowNull: false,
                 type: Sequelize.STRING,
+                unique: true,
             },
             total_cost: {
                 allowNull: false,

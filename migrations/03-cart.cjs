@@ -1,5 +1,3 @@
-//clear
-
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable('carts', {
@@ -28,6 +26,11 @@ module.exports = {
                 },
                 onUpdate: 'RESTRICT',
                 onDelete: 'SET NULL',
+            },
+            transaction: {
+                allowNull: false,
+                type: Sequelize.STRING,
+                unique: true,
             },
             name: {
                 allowNull: false,

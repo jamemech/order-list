@@ -1,5 +1,3 @@
-//clear
-
 import { DataTypes } from 'sequelize'
 
 export class Cart {
@@ -18,7 +16,7 @@ export class Cart {
                     model: 'Order',
                     key: 'id',
                 },
-                onUpdate: 'RESTRICT',
+                onUpdate: 'SET NULL',
                 onDelete: 'SET NULL',
             },
             product_id: {
@@ -28,8 +26,13 @@ export class Cart {
                     model: 'Product',
                     key: 'id',
                 },
-                onUpdate: 'RESTRICT',
+                onUpdate: 'SET NULL',
                 onDelete: 'SET NULL',
+            },
+            transaction: {
+                allowNull: false,
+                type: DataTypes.STRING,
+                unique: true,
             },
             name: {
                 allowNull: false,

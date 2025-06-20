@@ -1,5 +1,3 @@
-//clear
-
 import { Sequelize } from 'sequelize'
 
 export class Connection {

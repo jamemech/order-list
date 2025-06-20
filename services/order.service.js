@@ -20,22 +20,25 @@ export class OrderService {
         }
     }
 
-    createOrderServ = async ({ cartItems, totalCost }) => {
-        const orderData = {
-            username: "root04",
+    createOrderServ = async ({ cartList, totalCost }) => {
+        const transaction = `TXN-${Date.now()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`
+
+        const order = {
+            transaction,
             total_cost: totalCost
         }
 
-        const order = await this.orderRepository.createOrder(orderData)
+        const { id } = await this.orderRepository.createOrder(order)
 
-        const cartsData = cartItems.map(item => ({
-            order_id: order.dataValues.id,
+        const carts = cartList.map(item => ({
+            order_id: id,
+            transaction,
             ...item
         }))
 
-        await this.cartRepository.createCarts(cartsData)
+        await this.cartRepository.createCarts(carts)
 
-        return order
+        return { transaction }
     }
 
 

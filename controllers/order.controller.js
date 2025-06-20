@@ -1,3 +1,5 @@
+import { verifyToken } from '../middlewares/auth.middleware.js'
+
 export class OrderController {
     constructor(service, router) {
         this.service = service
@@ -5,7 +7,6 @@ export class OrderController {
         router.get('/order', this.getOrderPageCtrl)
         router.post('/order/create', this.createOrderCtrl)
         router.patch('/order/status', this.updateOrderStatusCtrl)
-
     }
 
     getOrderPageCtrl = async (req, res) => {
@@ -26,8 +27,8 @@ export class OrderController {
 
     createOrderCtrl = async (req, res) => {
         try {
-            const order = await this.service.createOrderServ(req.body)
-            res.status(201).json({ order_id: order.dataValues.id, message: 'Create order' })
+            const { transaction } = await this.service.createOrderServ(req.body)
+            res.status(201).json({ transaction, message: 'Create order' })
 
         } catch (error) {
             console.error(error)

@@ -65,7 +65,7 @@ export class InventoryController {
 
     updateInventoryImageCtrl = async (req, res) => {
         try {
-            await this.service.updateInventoryImageServ(req.body.id, req.file.path)
+            await this.service.updateInventoryImageServ(req.body.id, req.file.filename)
             res.status(200).json({ message: 'Update inventory image' })
 
         } catch (error) {

@@ -14,10 +14,10 @@ export class InventoryRepository {
         return product.image
     }
 
-    createProduct = (productData) => this.Product.create(productData)
+    createProduct = (product) => this.Product.create(product)
 
-    updateProduct = (id, productData) => this.Product.update(
-        productData,
+    updateProduct = (id, product) => this.Product.update(
+        product,
         { where: { id } }
     )
 

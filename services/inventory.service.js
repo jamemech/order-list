@@ -22,9 +22,9 @@ export class InventoryService {
         }
     }
 
-    createInventoryServ = (productData) => this.repository.createProduct(productData)
+    createInventoryServ = (product) => this.repository.createProduct(product)
 
-    updateInventoryServ = async ({ id, ...productData }) => this.repository.updateProduct(id, productData)
+    updateInventoryServ = async ({ id, ...product }) => this.repository.updateProduct(id, product)
 
     updateInventoryStatusServ = async ({ id, status }) => this.repository.updateStatus(id, status)
 

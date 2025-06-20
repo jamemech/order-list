@@ -1,5 +1,3 @@
-//clear
-
 import 'dotenv/config'
 
 export default {

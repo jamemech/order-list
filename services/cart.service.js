@@ -12,8 +12,8 @@ export class CartService {
         const order = [['created_at', 'DESC'], ['product_id', 'ASC']]
         let where = {}
 
-        if (query.order_id) {
-            where.order_id = query.order_id
+        if (query.transaction) {
+            where.transaction = query.transaction
         }
 
         const { rows, count } = await this.repository.getPage(limit, offset, order, where)

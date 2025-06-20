@@ -1,5 +1,3 @@
-//clear
-
 import { DataTypes } from 'sequelize'
 
 export class Product {

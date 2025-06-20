@@ -9,7 +9,7 @@ export class OrderRepository {
         order
     })
 
-    createOrder = (orderData) => this.Order.create(orderData)
+    createOrder = (order) => this.Order.create(order)
 
     updateStatus = (id, status) => this.Order.update(
         { status },
