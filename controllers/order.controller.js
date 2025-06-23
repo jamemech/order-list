@@ -1,12 +1,12 @@
-import { verifyToken } from '../middlewares/auth.middleware.js'
+import { verifyTokenRenderPage, verifyTokenAPI } from '../middlewares/auth.middleware.js'
 
 export class OrderController {
     constructor(service, router) {
         this.service = service
 
-        router.get('/order', this.getOrderPageCtrl)
-        router.post('/order/create', this.createOrderCtrl)
-        router.patch('/order/status', this.updateOrderStatusCtrl)
+        router.get('/order', verifyTokenRenderPage, this.getOrderPageCtrl)
+        router.post('/order/create', verifyTokenAPI, this.createOrderCtrl)
+        router.patch('/order/status', verifyTokenAPI, this.updateOrderStatusCtrl)
     }
 
     getOrderPageCtrl = async (req, res) => {

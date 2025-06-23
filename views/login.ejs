@@ -9,14 +9,12 @@
     <h1 style="font-size: 26px;">Login</h1>
 
     <form id="login" autocomplete="off">
-        <label for="username" style="font-size: 20px;">Username</label><br>
-        <input id="username" name="username" type="text" required
-            style="width: 360px; padding: 8px; margin-bottom: 20px;">
+        <label style="font-size: 20px;">Username</label><br>
+        <input type="text" required style="width: 360px; padding: 8px; margin-bottom: 20px;">
         <br>
 
-        <label for="password" style="font-size: 20px;">Password</label><br>
-        <input id="password" name="password" type="password" required
-            style="width: 360px; padding: 8px; margin-bottom: 20px;">
+        <label style="font-size: 20px;">Password</label><br>
+        <input type="password" required style="width: 360px; padding: 8px; margin-bottom: 20px;">
         <br>
 
         <button type="submit">Login</button>
@@ -33,7 +31,7 @@
         const username = e.target.username.value
         const password = e.target.password.value
 
-        const res = await fetch('http://localhost:3000/authen', {
+        const res = await fetch('http://localhost:3000/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })

@@ -1,9 +1,11 @@
+import { isAlreadyLogin } from '../middlewares/auth.middleware.js'
+
 export class LoginController {
     constructor(service, router) {
         this.service = service
 
-        router.get('/login', this.getLoginPageCtrl)
-        router.post('/authen', this.loginCtrl)
+        router.get('/login', isAlreadyLogin, this.getLoginPageCtrl)
+        router.post('/login', this.loginCtrl)
     }
 
     getLoginPageCtrl = async (req, res) => {

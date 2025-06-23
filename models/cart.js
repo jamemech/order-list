@@ -32,7 +32,6 @@ export class Cart {
             transaction: {
                 allowNull: false,
                 type: DataTypes.STRING,
-                unique: true,
             },
             name: {
                 allowNull: false,

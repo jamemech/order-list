@@ -2,6 +2,7 @@ import express, { Router } from 'express'
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
+import cookieParser from 'cookie-parser'
 import 'dotenv/config'
 import config from './configs/db.config.js'
 import { Connection } from './connections/sequelize.connection.js'
@@ -49,6 +50,8 @@ const upload = multer({
             cb(null, `${Date.now()}${path.extname(file.originalname)}`)
     })
 })
+
+app.use(cookieParser())
 
 app.set("view engine", "ejs")
 app.set('views', './views')

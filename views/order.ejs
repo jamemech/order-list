@@ -52,9 +52,7 @@
         <% data.forEach(order=> { %>
             <tr data-id="<%= order.id %>">
                 <td>
-                    <a href="/cart?order_id=<%= order.id %>">
-                        <%= order.id %>
-                    </a>
+                    <%= order.id %>
                 </td>
 
                 <td>

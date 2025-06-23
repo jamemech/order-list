@@ -14,6 +14,7 @@ export class LoginService {
 
         const payload = { username }
         const options = { expiresIn: '1h' }
-        return jwt.sign(payload, config.jwtSecret, options)
+        const token = jwt.sign(payload, config.jwtSecret, options)
+        return token
     }
 }

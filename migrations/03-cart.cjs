@@ -30,7 +30,6 @@ module.exports = {
             transaction: {
                 allowNull: false,
                 type: Sequelize.STRING,
-                unique: true,
             },
             name: {
                 allowNull: false,
