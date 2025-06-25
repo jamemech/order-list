@@ -4,8 +4,8 @@ export class OrderService {
         this.cartRepository = cartRepository
     }
 
-    getOrderPageServ = async (query) => {
-        const page = parseInt(query.page) || 1
+    getOrderPageServ = async (queryPage) => {
+        const page = parseInt(queryPage) || 1
         const limit = 10
         const offset = limit * (page - 1)
         const order = [['created_at', 'DESC']]

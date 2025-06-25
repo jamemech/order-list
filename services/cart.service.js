@@ -5,15 +5,15 @@ export class CartService {
         this.repository = repository
     }
 
-    getCartPageServ = async (query) => {
-        const page = parseInt(query.page) || 1
+    getCartPageServ = async (queryPage, queryTransaction) => {
+        const page = parseInt(queryPage) || 1
         const limit = 10
         const offset = limit * (page - 1)
         const order = [['created_at', 'DESC'], ['product_id', 'ASC']]
         let where = {}
 
-        if (query.transaction) {
-            where.transaction = query.transaction
+        if (queryTransaction) {
+            where.transaction = queryTransaction
         }
         const { rows, count } = await this.repository.getPage(limit, offset, order, where)
         const totalPages = Math.max(1, Math.ceil(count / limit))
@@ -21,9 +21,9 @@ export class CartService {
         let transaction = null
         let label = null
 
-        if (query.transaction) {
-            transaction = query.transaction
-            label = `ORDER${rows[0]?.order_id} ${transaction.slice(0, 4)}`
+        if (queryTransaction) {
+            transaction = queryTransaction
+            label = `ORDER ${rows[0]?.order_id} - ${transaction.slice(0, 4)}`
         }
 
         return {

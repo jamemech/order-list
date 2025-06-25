@@ -1,17 +1,18 @@
 import { inventoryValidation } from '../dtos/inventory.js'
 import { handleValidationErrors } from '../utils/validation.js'
+import { verifyTokenRenderPage, verifyTokenAPI } from '../middlewares/auth.middleware.js'
 
 export class InventoryController {
     constructor(service, router, upload) {
         this.service = service
         this.upload = upload
 
-        router.get('/inventory', this.getInventoryPageCtrl)
-        router.post('/inventory/create', inventoryValidation(), handleValidationErrors, this.createInventoryCtrl)
-        router.put('/inventory/edit', inventoryValidation(), handleValidationErrors, this.updateInventoryCtrl)
-        router.patch('/inventory/status', this.updateInventoryStatusCtrl)
-        router.patch('/inventory/upload', this.upload.single('image'), this.updateInventoryImageCtrl)
-        router.delete('/inventory/delete', this.deleteInventoryCtrl)
+        router.get('/inventory', verifyTokenRenderPage, this.getInventoryPageCtrl)
+        router.post('/inventory/create', verifyTokenAPI, inventoryValidation(), handleValidationErrors, this.createInventoryCtrl)
+        router.put('/inventory/edit', verifyTokenAPI, inventoryValidation(), handleValidationErrors, this.updateInventoryCtrl)
+        router.patch('/inventory/status', verifyTokenAPI, this.updateInventoryStatusCtrl)
+        router.patch('/inventory/upload', verifyTokenAPI, this.upload.single('image'), this.updateInventoryImageCtrl)
+        router.delete('/inventory/delete', verifyTokenAPI, this.deleteInventoryCtrl)
     }
 
     getInventoryPageCtrl = async (req, res) => {

@@ -6,8 +6,8 @@ export class InventoryService {
         this.repository = repository
     }
 
-    getInventoryPageServ = async (query) => {
-        const page = parseInt(query.page) || 1
+    getInventoryPageServ = async (queryPage) => {
+        const page = parseInt(queryPage) || 1
         const limit = 5
         const offset = limit * (page - 1)
         const order = [['id', 'DESC']]
