@@ -3,8 +3,8 @@ export class ShopService {
         this.repository = repository
     }
 
-    getShopPageServ = async (queryPage) => {
-        const page = parseInt(queryPage) || 1
+    getShopPageServ = async (query) => {
+        const page = parseInt(query.page) || 1
         const limit = 5
         const offset = limit * (page - 1)
         const order = [['type', 'ASC']]

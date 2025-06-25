@@ -1,11 +1,13 @@
 import { isAlreadyLogin } from '../middlewares/auth.middleware.js'
+import { loginValidation } from '../dtos/login.validation.js'
+import { handleValidationErrors } from '../utils/validation.js'
 
 export class LoginController {
     constructor(service, router) {
         this.service = service
 
         router.get('/', isAlreadyLogin, this.getLoginPageCtrl)
-        router.post('/', this.loginCtrl)
+        router.post('/login', loginValidation(), handleValidationErrors, this.loginCtrl)
     }
 
     getLoginPageCtrl = async (req, res) => {

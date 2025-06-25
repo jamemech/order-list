@@ -1,6 +1,6 @@
-import { inventoryValidation } from '../dtos/inventory.js'
-import { handleValidationErrors } from '../utils/validation.js'
 import { verifyTokenRenderPage, verifyTokenAPI } from '../middlewares/auth.middleware.js'
+import { inventoryValidation } from '../dtos/inventory.validation.js'
+import { handleValidationErrors } from '../utils/validation.js'
 
 export class InventoryController {
     constructor(service, router, upload) {

@@ -1,10 +1,8 @@
-import { verifyTokenRenderPage } from '../middlewares/auth.middleware.js'
-
 export class CartController {
     constructor(service, router) {
         this.service = service
 
-        router.get('/cart', verifyTokenRenderPage, this.getCartPageCtrl)
+        router.get('/cart', this.getCartPageCtrl)
     }
 
     getCartPageCtrl = async (req, res) => {
