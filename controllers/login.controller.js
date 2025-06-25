@@ -4,8 +4,8 @@ export class LoginController {
     constructor(service, router) {
         this.service = service
 
-        router.get('/login', isAlreadyLogin, this.getLoginPageCtrl)
-        router.post('/login', this.loginCtrl)
+        router.get('/', isAlreadyLogin, this.getLoginPageCtrl)
+        router.post('/', this.loginCtrl)
     }
 
     getLoginPageCtrl = async (req, res) => {

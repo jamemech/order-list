@@ -31,20 +31,20 @@
         const username = e.target.username.value
         const password = e.target.password.value
 
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('http://localhost:3000/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
         })
 
-        const { token, error } = await response.json()
+        const data = await response.json()
 
-        if (!response.ok || !token) {
-            document.getElementById('errorMsg').textContent = error
+        if (!response.ok || !data.token) {
+            document.getElementById('errorMsg').textContent = data.error
             return
         }
 
-        document.cookie = `token=${token}; path=/; max-age=3600`
+        document.cookie = `token=${data.token}; path=/; max-age=3600`
         window.location.href = '/order'
     }
 </script>

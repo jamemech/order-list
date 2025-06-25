@@ -73,7 +73,7 @@
                 </td>
 
                 <td style="text-align: left;">
-                    <select name="status" class="status-btn">
+                    <select name="status" class="select-status">
                         <option value="Inactive" <%=product.status==='Inactive' && 'selected' %>>Inactive</option>
                         <option value="Active" <%=product.status==='Active' && 'selected' %>>Active</option>
                     </select>
@@ -122,9 +122,8 @@
                 }
 
                 const token = getCookie('token')
-
                 if (!token) {
-                    window.location.href = "/login"
+                    window.location.href = "/"
                     return
                 }
 
@@ -138,8 +137,7 @@
                 })
 
                 const data = await response.json()
-
-                if (!response.ok) {
+                if (!response.ok && data.errors) {
                     const errorMessages = data.errors.map(err => err.msg).join("\n")
                     alert(errorMessages)
                     return
@@ -159,15 +157,11 @@
 
         document.querySelectorAll(".edit-btn").forEach(button => {
             button.addEventListener("click", () => {
-                document.querySelectorAll("button").forEach(btn => {
-                    btn.disabled = true
-                })
+                document.querySelectorAll("button").forEach(btn => btn.disabled = true)
 
                 const row = button.closest("tr")
                 const id = row.dataset.id
-
                 const current = {
-                    id: row.dataset.id,
                     name: row.dataset.name,
                     price: row.dataset.price,
                     type: row.dataset.type
@@ -179,23 +173,30 @@
 
                 const saveBtn = btn("Save", async () => {
                     const inputs = row.querySelectorAll("input")
-
                     const productData = {
                         name: inputs[0].value,
                         price: parseFloat(parseFloat(inputs[1].value).toFixed(2)),
                         type: inputs[2].value
                     }
 
+                    const token = getCookie('token')
+                    if (!token) {
+                        window.location.href = "/"
+                        return
+                    }
+
                     const response = await fetch("http://localhost:3000/inventory/edit", {
                         method: "PUT",
-                        headers: { "Content-Type": "application/json" },
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
+                        },
                         body: JSON.stringify({ id, ...productData })
                     })
 
-                    const { errors } = await response.json()
-
-                    if (!response.ok) {
-                        const errorMessages = errors.map(err => err.msg).join("\n")
+                    const data = await response.json()
+                    if (!response.ok && data.errors) {
+                        const errorMessages = data.errors.map(err => err.msg).join("\n")
                         alert(errorMessages)
                         return
                     }
@@ -210,15 +211,24 @@
             })
         })
 
-        document.querySelectorAll(".status-btn").forEach(select => {
+        document.querySelectorAll(".select-status").forEach(select => {
             select.addEventListener("change", async () => {
                 const row = select.closest("tr")
                 const id = row.dataset.id
                 const status = select.value
 
+                const token = getCookie('token')
+                if (!token) {
+                    window.location.href = "/"
+                    return
+                }
+
                 await fetch("http://localhost:3000/inventory/status", {
                     method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
                     body: JSON.stringify({ id, status })
                 })
             })
@@ -240,8 +250,17 @@
                     formData.append("id", id)
                     formData.append("image", image)
 
+                    const token = getCookie('token')
+                    if (!token) {
+                        window.location.href = "/"
+                        return
+                    }
+
                     await fetch("http://localhost:3000/inventory/upload", {
                         method: "PATCH",
+                        headers: {
+                            "Authorization": `Bearer ${token}`
+                        },
                         body: formData
                     })
 
@@ -254,13 +273,20 @@
             button.addEventListener("click", async () => {
                 const row = button.closest("tr")
                 const id = row.dataset.id
+                if (!confirm("Delete product")) return
 
-                const confirmDelete = confirm("Delete product")
-                if (!confirmDelete) return
+                const token = getCookie('token')
+                if (!token) {
+                    window.location.href = "/"
+                    return
+                }
 
                 await fetch("http://localhost:3000/inventory/delete", {
                     method: "DELETE",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
                     body: JSON.stringify({ id })
                 })
 
