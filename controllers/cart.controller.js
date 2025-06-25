@@ -7,12 +7,14 @@ export class CartController {
 
     getCartPageCtrl = async (req, res) => {
         try {
-            const { data, totalPages, page } = await this.service.getCartPageServ(req.query)
+            const { data, totalPages, page, transaction, label } = await this.service.getCartPageServ(req.query)
 
             res.render('cart', {
                 data,
                 totalPages,
-                page
+                page,
+                transaction,
+                label
             })
 
         } catch (error) {

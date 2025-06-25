@@ -15,14 +15,23 @@ export class CartService {
         if (query.transaction) {
             where.transaction = query.transaction
         }
-
         const { rows, count } = await this.repository.getPage(limit, offset, order, where)
         const totalPages = Math.max(1, Math.ceil(count / limit))
+
+        let transaction = null
+        let label = null
+
+        if (query.transaction) {
+            transaction = query.transaction
+            label = `ORDER${rows[0]?.order_id} ${transaction.slice(0, 4)}`
+        }
 
         return {
             data: rows,
             totalPages,
-            page
+            page,
+            transaction,
+            label
         }
     }
 }

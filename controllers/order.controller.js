@@ -5,7 +5,7 @@ export class OrderController {
         this.service = service
 
         router.get('/order', verifyTokenRenderPage, this.getOrderPageCtrl)
-        router.post('/order/create', verifyTokenAPI, this.createOrderCtrl)
+        router.post('/order/create', this.createOrderCtrl)
         router.patch('/order/status', verifyTokenAPI, this.updateOrderStatusCtrl)
     }
 

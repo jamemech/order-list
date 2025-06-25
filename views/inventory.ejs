@@ -95,6 +95,13 @@
             return btn
         }
 
+        const getCookie = (name) => {
+            const value = `; ${document.cookie}`
+            const parts = value.split(`; ${name}=`)
+            if (parts.length === 2) return parts.pop().split(';').shift()
+            return null
+        }
+
         document.querySelector(".create-btn").addEventListener("click", () => {
             const modal = document.getElementById("modal")
             const modalControl = document.getElementById("modalControl")
@@ -114,14 +121,25 @@
                     type: typeInput
                 }
 
+                const token = getCookie('token')
+
+                if (!token) {
+                    window.location.href = "/login"
+                    return
+                }
+
                 const response = await fetch("http://localhost:3000/inventory/create", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
                     body: JSON.stringify(productData)
                 })
 
+                const data = await response.json()
+
                 if (!response.ok) {
-                    const data = await response.json()
                     const errorMessages = data.errors.map(err => err.msg).join("\n")
                     alert(errorMessages)
                     return
@@ -174,9 +192,10 @@
                         body: JSON.stringify({ id, ...productData })
                     })
 
+                    const { errors } = await response.json()
+
                     if (!response.ok) {
-                        const data = await response.json()
-                        const errorMessages = data.errors.map(err => err.msg).join("\n")
+                        const errorMessages = errors.map(err => err.msg).join("\n")
                         alert(errorMessages)
                         return
                     }
