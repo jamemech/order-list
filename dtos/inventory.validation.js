@@ -20,7 +20,7 @@ export const inventoryValidation = () => {
             .bail()
             .custom(value => {
                 const num = parseFloat(value)
-                if (num > 9999999.99) {
+                if (num > 1000000000000.00) {
                     throw new Error('Price too high')
                 }
                 return true

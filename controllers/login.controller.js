@@ -24,7 +24,7 @@ export class LoginController {
         } catch (error) {
             console.error(error)
             if (error.name === 'UnauthorizedError') {
-                res.status(401).json({ error: 'Login failed' })
+                res.status(401).json({ error: 'Username or password is incorrect' })
             } else {
                 res.status(500).json({ error: 'Internal Server Error' })
             }
