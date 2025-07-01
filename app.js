@@ -52,12 +52,11 @@ const upload = multer({
 })
 
 app.use(cookieParser())
+app.use(express.json())
+app.use('/uploads', express.static('uploads'))
 
 app.set("view engine", "ejs")
 app.set('views', './views')
-
-app.use(express.json())
-app.use('/uploads', express.static('uploads'))
 
 db.authenticate()
     .then(() => {
