@@ -143,16 +143,16 @@
             const list = document.createElement("ul")
             cartList.forEach(item => {
                 list.innerHTML += `
-            <li>
-                (${String(item.product_id).padStart(3, '0')}) ${item.name}<br>
-                ${item.piece} pcs - ${item.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿
-                <br><br>
-            </li>`
+                <li>
+                    (${String(item.product_id).padStart(3, '0')}) ${item.name}<br>
+                    ${item.piece} pcs - ${item.cost.toLocaleString('th-TH', { minimumFractionDigits: 2 })} ฿
+                    <br><br>
+                </li>
+                `
             })
             modalBody.appendChild(list)
 
-            modalControl.innerHTML = ''
-            modalControl.appendChild(btn("Confirm", async () => {
+            const confirmBtn = btn("Confirm", async () => {
                 const res = await fetch("http://localhost:3000/order/create", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -164,8 +164,13 @@
                     if (key.startsWith('piece-')) localStorage.removeItem(key)
                 })
                 window.location.href = `/cart?transaction=${data.transaction}`
-            }))
-            modalControl.appendChild(btn("Close", () => modal.style.display = "none"))
+            })
+
+            const closeBtn = btn("Close", () => modal.style.display = "none")
+
+            modalControl.innerHTML = ''
+            modalControl.appendChild(confirmBtn)
+            modalControl.appendChild(closeBtn)
             modal.style.display = "flex"
         })
     </script>

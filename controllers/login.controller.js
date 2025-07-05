@@ -1,10 +1,10 @@
-import { isAlreadyLogin } from '../middlewares/auth.middleware.js'
+import { alreadyLogin } from '../middlewares/auth.middleware.js'
 
 export class LoginController {
     constructor(service, router) {
         this.service = service
 
-        router.get('/', isAlreadyLogin, this.getLoginPageCtrl)
+        router.get('/', alreadyLogin, this.getLoginPageCtrl)
         router.post('/login', this.loginCtrl)
     }
 

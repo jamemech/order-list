@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-export const inventoryValidation = () => {
+export const inventoryValidator = () => {
     return [
         body('name')
             .trim()

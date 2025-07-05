@@ -4,8 +4,10 @@ import path from 'path'
 import fs from 'fs'
 import cookieParser from 'cookie-parser'
 import 'dotenv/config'
+
 import config from './configs/db.config.js'
 import { Connection } from './connections/sequelize.connection.js'
+
 import { Order } from './models/order.js'
 import { Product } from './models/product.js'
 import { Cart } from './models/cart.js'
@@ -31,6 +33,7 @@ import { CartController } from './controllers/cart.controller.js'
 
 const env = process.env.NODE_ENV || 'development'
 const db = new Connection(config, env)
+
 const productDb = new Product(db)
 const cartDb = new Cart(db)
 const orderDb = new Order(db)
