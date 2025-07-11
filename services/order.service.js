@@ -21,7 +21,7 @@ export class OrderService {
     }
 
     createOrderServ = async ({ cartList, totalCost }) => {
-        const transaction = `T${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}-${Date.now()}`
+        const transaction = `T${Date.now().toString().slice(-6)}`
 
         const order = {
             transaction,
