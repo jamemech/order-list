@@ -7,7 +7,7 @@ export class ShopService {
         const page = parseInt(query.page) || 1
         const limit = 5
         const offset = limit * (page - 1)
-        const order = [['type', 'ASC']]
+        const order = [['type', 'ASC'], ['price', 'DESC']]
         const where = { status: 'Active' }
 
         const { rows, count } = await this.repository.getPage(limit, offset, order, where)
