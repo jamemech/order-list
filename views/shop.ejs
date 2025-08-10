@@ -89,14 +89,14 @@
         }
 
         const savePiece = (id, value, name, price) => {
-            localStorage.setItem('piece-' + id, JSON.stringify({ piece: value, name, price }))
+            sessionStorage.setItem('piece-' + id, JSON.stringify({ piece: value, name, price }))
         }
 
         const loadPieces = () => {
             document.querySelectorAll('tr[data-id]').forEach(row => {
                 const id = row.dataset.id
                 const input = row.querySelector('.piece-btn')
-                const stored = localStorage.getItem('piece-' + id)
+                const stored = sessionStorage.getItem('piece-' + id)
                 if (stored) input.value = JSON.parse(stored).piece
             })
         }
@@ -124,11 +124,11 @@
             let cartList = []
             let totalCost = 0
 
-            for (const key in localStorage) {
+            for (const key in sessionStorage) {
                 if (!key.startsWith('piece-')) continue
                 try {
                     const id = key.slice(6)
-                    const { piece, name, price } = JSON.parse(localStorage.getItem(key))
+                    const { piece, name, price } = JSON.parse(sessionStorage.getItem(key))
                     const p = parseInt(piece)
                     if (p <= 0) continue
                     const cost = p * parseFloat(price)
@@ -160,8 +160,8 @@
                 })
                 const data = await res.json()
                 if (!res.ok) return alert(data.error)
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith('piece-')) localStorage.removeItem(key)
+                Object.keys(sessionStorage).forEach(key => {
+                    if (key.startsWith('piece-')) sessionStorage.removeItem(key)
                 })
                 window.location.href = `/cart?transaction=${data.transaction}`
             })
