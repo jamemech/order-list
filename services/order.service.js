@@ -41,5 +41,5 @@ export class OrderService {
         return { transaction }
     }
 
-    updateOrderStatusServ = async ({ id, status }) => this.orderRepository.updateStatus(id, status)
+    updateOrderStatusServ = ({ id, status }) => this.orderRepository.updateStatus(id, status)
 }

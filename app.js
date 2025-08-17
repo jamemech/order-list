@@ -61,15 +61,6 @@ app.use('/uploads', express.static('uploads'))
 app.set("view engine", "ejs")
 app.set('views', './views')
 
-db.authenticate()
-    .then(() => {
-        console.log('Database connected')
-    })
-    .catch((error) => {
-        console.error('Database connect error:', error)
-        setImmediate(() => process.exit(1))
-    })
-
 const loginSvc = new LoginService()
 new LoginController(loginSvc, router)
 
@@ -91,22 +82,31 @@ new OrderController(orderSvc, router)
 
 app.use(router)
 
-const server = app.listen(port, () => {
-    console.log(`Server listening on port: ${port}`)
-})
+db.authenticate()
+    .then(() => {
+        console.log('Database connected')
 
-process.on('SIGINT', async () => {
-    console.log('Shutting down...')
+        const server = app.listen(port, () => {
+            console.log(`Server listening on port: ${port}`)
+        })
 
-    try {
-        await db.close()
-        console.log('Database closed')
-    } catch (error) {
-        console.error('Database close error:', error)
-    }
+        process.on('SIGINT', async () => {
+            console.log('Shutting down...')
 
-    server.close(() => {
-        console.log('Server Closed')
-        setImmediate(() => process.exit(0))
+            try {
+                await db.close()
+                console.log('Database closed')
+            } catch (error) {
+                console.error('Database close error:', error)
+            }
+
+            server.close(() => {
+                console.log('Server Closed')
+                setImmediate(() => process.exit(0))
+            })
+        })
     })
-})
+    .catch((error) => {
+        console.error('Database connect error:', error)
+        setImmediate(() => process.exit(1))
+    })

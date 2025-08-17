@@ -24,18 +24,18 @@ export class InventoryService {
 
     createInventoryServ = (product) => this.repository.createProduct(product)
 
-    updateInventoryServ = async ({ id, ...product }) => this.repository.updateProduct(id, product)
+    updateInventoryServ = ({ id, ...product }) => this.repository.updateProduct(id, product)
 
-    updateInventoryStatusServ = async ({ id, status }) => this.repository.updateStatus(id, status)
+    updateInventoryStatusServ = ({ id, status }) => this.repository.updateStatus(id, status)
 
-    updateInventoryImageServ = async (id, image) => {
-        await this._deleteImage(id)
-        await this.repository.updateImage(id, image)
+    updateInventoryImageServ = (id, image) => {
+        this._deleteImage(id)
+        this.repository.updateImage(id, image)
     }
 
-    deleteInventoryServ = async (id) => {
-        await this._deleteImage(id)
-        await this.repository.deleteProduct(id)
+    deleteInventoryServ = (id) => {
+        this._deleteImage(id)
+        this.repository.deleteProduct(id)
     }
 
     _deleteImage = async (id) => {
