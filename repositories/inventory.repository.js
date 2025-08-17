@@ -11,7 +11,9 @@ export class InventoryRepository {
 
     getImage = async (id) => {
         const product = await this.Product.findByPk(id)
-        return product.image
+        if (product) {
+            return product.image
+        }
     }
 
     createProduct = (product) => this.Product.create(product)

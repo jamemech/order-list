@@ -22,7 +22,7 @@ export class LoginController {
             const token = await this.service.loginServ(req.body)
             res.status(200).json({ token, message: 'Login successful' })
         } catch (error) {
-            console.error(error)
+            console.error(error.message || error.name)
             if (error.name === 'UnauthorizedError') {
                 res.status(401).json({ error: 'Username or password is incorrect' })
             } else {
